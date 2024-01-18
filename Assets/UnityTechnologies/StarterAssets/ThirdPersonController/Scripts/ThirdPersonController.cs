@@ -1,4 +1,5 @@
-﻿ using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -159,6 +160,14 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                print("lol");
+                var rb = this.AddComponent<Rigidbody>();
+                rb.AddForce(Vector3.forward * 10, ForceMode.Impulse);
+                Destroy(rb);
+            }
         }
 
         private void LateUpdate()
