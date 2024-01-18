@@ -32,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
         float moveVertical = Input.GetAxis("Vertical");
         bool jumpPressed = Input.GetButtonDown("Jump"); // Détecter si l'utilisateur appuie sur la barre espace
 
+        animator.SetBool("IsMoving", moveVertical != 0 || moveHorizontal != 0 ? true : false);
+
         // Calculer la direction du mouvement
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
@@ -57,8 +59,6 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
-
-        animator.SetFloat("Speed", movement.magnitude * 2.5f);
     }
 
     private void FixedUpdate()
