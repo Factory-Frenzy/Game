@@ -101,5 +101,10 @@ public class PlayerMovement : NetworkBehaviour
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 
-    public void OnFootstep() { }
+    public void OnFootstep() 
+    {
+        //print("OnFootstep");
+    }
+
+    public void OnLand() { }
 }
