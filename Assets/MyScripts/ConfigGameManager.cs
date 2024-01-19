@@ -15,6 +15,7 @@ public class ConfigGameManager : MonoBehaviour
     [SerializeField] private GameObject ClientMenu;
     [SerializeField] private TMP_InputField IpServerInput;
     [SerializeField] private TextMeshProUGUI SceneNameText;
+    private string _pathjsonfile = string.Empty;
 
     public void NextMenu(int menu)
     {
@@ -38,13 +39,14 @@ public class ConfigGameManager : MonoBehaviour
     {
         if (isHost)
         {
-            // if json est good
-            // TODO
+            //if (_pathjsonfile == string.Empty) return;
 
             var scene = SceneManager.LoadSceneAsync("Lobby");
             scene.completed += (AsyncOperation operation) =>
             {
-                if(NetworkManager.Singleton.StartHost())
+                MapImport mapImport = NetworkManager.Singleton.gameObject.AddComponent<MapImport>();
+                mapImport.GetJSONMap(_pathjsonfile);
+                if (NetworkManager.Singleton.StartHost())
                 NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
             };
         }
@@ -64,11 +66,6 @@ public class ConfigGameManager : MonoBehaviour
         }
     }
 
-    private void LoadScene(AsyncOperation operation)
-    {
-        throw new NotImplementedException();
-    }
-
     public void OpenFileBrowser()
     {
         var bp = new BrowserProperties();
@@ -77,8 +74,8 @@ public class ConfigGameManager : MonoBehaviour
 
         new FileBrowser().OpenFileBrowser(bp, path =>
         {
+            _pathjsonfile = path;
             SceneNameText.text = path.Split("\\")[path.Split("\\").Length - 1];
-            string jsonContent = File.ReadAllText(path);
         });
     }
 }

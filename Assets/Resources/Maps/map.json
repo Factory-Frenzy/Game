@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Platform Classical 80",
+    "position": {
+      "x": 9.42,
+      "y": 8.0,
+      "z": 9.89,
+      "normalized": {
+        "x": 0.5951206,
+        "y": 0.5054103,
+        "z": 0.6248135,
+        "magnitude": 1.0,
+        "sqrMagnitude": 1.0
+      },
+      "magnitude": 15.8287239,
+      "sqrMagnitude": 250.548508
+    },
+    "rotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0,
+      "eulerAngles": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "magnitude": 0.0,
+        "sqrMagnitude": 0.0
+      }
+    }
+  },
+  {
+    "name": "Platform Start",
+    "position": {
+      "x": 9.42,
+      "y": 8.0,
+      "z": 9.89,
+      "normalized": {
+        "x": 0.5951206,
+        "y": 0.5054103,
+        "z": 0.6248135,
+        "magnitude": 1.0,
+        "sqrMagnitude": 1.0
+      },
+      "magnitude": 15.8287239,
+      "sqrMagnitude": 250.548508
+    },
+    "rotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0,
+      "eulerAngles": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "magnitude": 0.0,
+        "sqrMagnitude": 0.0
+      }
+    }
+  },
+  {
+    "name": "Platform Classical 80",
+    "position": {
+      "x": 9.42,
+      "y": 8.0,
+      "z": 9.89,
+      "normalized": {
+        "x": 0.5951206,
+        "y": 0.5054103,
+        "z": 0.6248135,
+        "magnitude": 1.0,
+        "sqrMagnitude": 1.0
+      },
+      "magnitude": 15.8287239,
+      "sqrMagnitude": 250.548508
+    },
+    "rotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0,
+      "eulerAngles": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "magnitude": 0.0,
+        "sqrMagnitude": 0.0
+      }
+    }
+  },
+  {
+    "name": "Platform Classical 80",
+    "position": {
+      "x": 9.42,
+      "y": 8.0,
+      "z": 9.89,
+      "normalized": {
+        "x": 0.5951206,
+        "y": 0.5054103,
+        "z": 0.6248135,
+        "magnitude": 1.0,
+        "sqrMagnitude": 1.0
+      },
+      "magnitude": 15.8287239,
+      "sqrMagnitude": 250.548508
+    },
+    "rotation": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 1.0,
+      "eulerAngles": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "magnitude": 0.0,
+        "sqrMagnitude": 0.0
+      }
+    }
+  }
+]
