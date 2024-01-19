@@ -37,7 +37,7 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void ImReadyServerRpc()
     {
         lock (_lock)
