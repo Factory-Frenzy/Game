@@ -19,7 +19,7 @@ public class GameGeneration : NetworkBehaviour
             MapImport mapImport = NetworkManager.Singleton.gameObject.GetComponent<MapImport>();
             Maps = mapImport.Maps;
             Destroy(mapImport);
-            GenerationMap();
+            //GenerationMap();
             _findSpawn.Value = !_findSpawn.Value;
         }
         else if (_findSpawn.Value)
