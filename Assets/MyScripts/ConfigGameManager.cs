@@ -47,7 +47,7 @@ public class ConfigGameManager : MonoBehaviour
                 MapImport mapImport = NetworkManager.Singleton.gameObject.AddComponent<MapImport>();
                 mapImport.GetJSONMap(_pathjsonfile);
                 if (NetworkManager.Singleton.StartHost())
-                NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
+                    NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
             };
         }
         else
