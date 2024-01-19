@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     public float moveSpeed = 5f; // Vitesse de déplacement du personnage
     public float turnSpeed = 10f; // Vitesse de rotation du personnage
@@ -8,16 +9,30 @@ public class PlayerMovement : MonoBehaviour
     public Transform cameraTransform; // Transform de la caméra
     public LayerMask groundLayer; // Layer pour détecter le sol
     public float groundCheckDistance = 0.2f; // Distance pour vérifier si le personnage est au sol
+    public bool IsMoving { get; set; }
 
     private Rigidbody rb; // Rigidbody du personnage
     private Vector3 movement; // Direction du mouvement basée sur les entrées de l'utilisateur
     private bool isGrounded; // Est-ce que le personnage est au sol
 
     private Animator animator;
+    private bool _disableMovement = false;
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (!IsOwner)
+        {
+            cameraTransform.gameObject.SetActive(false);
+            _disableMovement = true;
+            //Destroy(this);
+        }
+    }
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        print(animator);
         rb = GetComponent<Rigidbody>(); // Récupérer le Rigidbody du personnage
         if (!cameraTransform)
         {
@@ -27,12 +42,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (_disableMovement) return;
+
         // Récupérer les entrées de l'utilisateur pour le mouvement et le saut
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
         bool jumpPressed = Input.GetButtonDown("Jump"); // Détecter si l'utilisateur appuie sur la barre espace
+        IsMoving = moveVertical != 0 || moveHorizontal != 0 ? true : false;
 
-        animator.SetBool("IsMoving", moveVertical != 0 || moveHorizontal != 0 ? true : false);
+        animator.SetBool("IsMoving", IsMoving);
 
         // Calculer la direction du mouvement
         Vector3 forward = cameraTransform.forward;
@@ -63,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_disableMovement) return;
         // Appliquer le mouvement au Rigidbody
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }

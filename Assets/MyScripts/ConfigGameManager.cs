@@ -1,9 +1,12 @@
 using AnotherFileBrowser.Windows;
+using System;
 using System.IO;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using static UnityEngine.Rendering.HDROutputUtils;
 
 public class ConfigGameManager : MonoBehaviour
 {
@@ -33,32 +36,39 @@ public class ConfigGameManager : MonoBehaviour
     }
     public void StartGame(bool isHost)
     {
-        switch(isHost)
+        if (isHost)
         {
-            case true:
-                // if json est good
-                var result = NetworkManager.Singleton.StartHost();
-                if (result)
-                {
-                    NetworkManager.Singleton.SceneManager.LoadScene("Lobby",
-                        UnityEngine.SceneManagement.LoadSceneMode.Single);
-                }
-                break;
-            case false:
-                var utp = (UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport;
-                // if addresse est good
-                if (IpServerInput.text != string.Empty)
-                {
-                    utp.SetConnectionData(IpServerInput.text, 7777);
-                }
-                else
-                {
-                    utp.SetConnectionData("127.0.0.1", 7777);
-                }
-                NetworkManager.Singleton.StartClient();
-                break;
+            // if json est good
+            // TODO
+
+            var scene = SceneManager.LoadSceneAsync("Lobby");
+            scene.completed += (AsyncOperation operation) =>
+            {
+                if(NetworkManager.Singleton.StartHost())
+                NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
+            };
+        }
+        else
+        {
+            var utp = (UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport;
+            // if addresse est good
+            if (IpServerInput.text != string.Empty)
+            {
+                utp.SetConnectionData(IpServerInput.text, 7777);
+            }
+            else
+            {
+                utp.SetConnectionData("127.0.0.1", 7777);
+            }
+            NetworkManager.Singleton.StartClient();
         }
     }
+
+    private void LoadScene(AsyncOperation operation)
+    {
+        throw new NotImplementedException();
+    }
+
     public void OpenFileBrowser()
     {
         var bp = new BrowserProperties();

@@ -9,7 +9,7 @@ public class OnlyForHost : MonoBehaviour
     {
         if (NetworkManager.Singleton.IsServer)
         {
-            this.gameObject.SetActive(false);
+            this.gameObject.SetActive(true);
         } 
     }
 }

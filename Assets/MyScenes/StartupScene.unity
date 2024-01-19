@@ -1207,7 +1207,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 893617153}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1830896994}
+        m_TargetAssemblyTypeName: ConfigGameManager, Assembly-CSharp
+        m_MethodName: StartGame
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &893617153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1440,7 +1452,8 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1067732410}
-    PlayerPrefab: {fileID: 0}
+    PlayerPrefab: {fileID: 3718881706972575658, guid: 56d9d762d607a094aa063c53a11a3fe0,
+      type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 648c6300b3cb20d4bb3ee50f5f08e659, type: 2}
@@ -2875,7 +2888,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2074182797}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1830896994}
+        m_TargetAssemblyTypeName: ConfigGameManager, Assembly-CSharp
+        m_MethodName: StartGame
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &2074182797
 MonoBehaviour:
   m_ObjectHideFlags: 0

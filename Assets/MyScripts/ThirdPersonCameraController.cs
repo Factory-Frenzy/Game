@@ -1,17 +1,17 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class ThirdPersonCameraController : MonoBehaviour
+public class ThirdPersonCameraController : NetworkBehaviour
 {
     public Transform target; // Le personnage que la caméra suit
     public float sensitivity = 5f; // Sensibilité de la rotation de la caméra
     public float minYAngle = -50f; // Angle minimum en Y pour la caméra
     public float maxYAngle = 85f; // Angle maximum en Y pour la caméra
 
-    public Vector3 initialOffset; // Offset initial entre la caméra et le personnage
+    private Vector3 initialOffset; // Offset initial entre la caméra et le personnage
     private Quaternion initialRotation; // Rotation initiale de la caméra
     private float currentX = 0f;
     private float currentY = 0f;
-
     private void Start()
     {
         //initialOffset = transform.position - target.position;
