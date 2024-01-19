@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : NetworkBehaviour
 {
     [NonSerialized]
-    public GameManager Instance = null;
+    public static GameManager Instance = null;
     private void Awake()
     {
         if (Instance != null)
