@@ -9,7 +9,8 @@ public class GameManager : NetworkBehaviour
 {
     [NonSerialized]
     public static GameManager Instance = null;
-    public NetworkVariable<int> GameStartCountdown = new NetworkVariable<int>(10);
+    public NetworkVariable<int> GameStartCountdown = new NetworkVariable<int>(3);
+    public NetworkVariable<int> TimeLeft = new NetworkVariable<int>(60*1+10);
 
     private List<ClientsInfos> _clientsInfos = new List<ClientsInfos>();
     private int _nbClientsReady = 0;
@@ -54,9 +55,11 @@ public class GameManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(1);
         GameStartCountdown.Value--;
+
         if (GameStartCountdown.Value == 0)
         {
             LetsGoPlayeClientRpc();
+            StartCoroutine(RunGameChrono());
         }
         else
         {
@@ -64,11 +67,48 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    private IEnumerator RunGameChrono()
+    {
+        yield return new WaitForSeconds(1);
+        TimeLeft.Value--;
+
+        if (TimeLeft.Value == 0)
+        {
+            // FIN DU JEUX
+            // TODO
+        }
+        else
+        {
+            StartCoroutine(RunGameChrono());
+        }
+    }
+
     [ClientRpc]
     private void LetsGoPlayeClientRpc()
     {
         // Lancer tout les script avant debut de partie
+        // ... TODO ....
+
         NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerMovement>().DisableMovement = false;
+    }
+
+    private ClientsInfos GetPlayerInfo(ulong playerId)
+    {
+        foreach (var item in _clientsInfos)
+        {
+            if (item.ClientId == playerId)
+            {
+                return item;
+            }
+        }
+        Debug.LogError("Player not found ...");
+        return null;
+    }
+
+    public void EndGameForThisPlayer(ulong playerId)
+    {
+        print("PlayerId: " + playerId + " " + "ScoreTime: " + TimeLeft.Value);
+        GetPlayerInfo(playerId).ScoreTime = TimeLeft.Value;
     }
 }
 
@@ -76,10 +116,12 @@ public class ClientsInfos
 {
     public ulong ClientId;
     public bool IsReady;
+    public int ScoreTime;
 
     public ClientsInfos(ulong ClientId)
     {
         this.ClientId = ClientId;
         this.IsReady = false;
+        this.ScoreTime = -1;
     }
 }

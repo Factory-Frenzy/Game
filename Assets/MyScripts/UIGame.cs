@@ -4,13 +4,21 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UIGameStartCountdown : MonoBehaviour
+public class UIGame : MonoBehaviour
 {
+    [SerializeField]
     private TextMeshProUGUI _UIGameStartCountdown;
+    [SerializeField]
+    private TextMeshProUGUI _UIChrono;
     private void Start()
     {
-        _UIGameStartCountdown = this.GetComponent<TextMeshProUGUI>();
         GameManager.Instance.GameStartCountdown.OnValueChanged += UIGameStartCountdownUpdate;
+        GameManager.Instance.TimeLeft.OnValueChanged += UIChronoUpdate;
+    }
+
+    private void UIChronoUpdate(int previousValue, int newValue)
+    {
+        _UIChrono.text = newValue.ToString();
     }
 
     private void UIGameStartCountdownUpdate(int previousValue, int newValue)
@@ -19,12 +27,12 @@ public class UIGameStartCountdown : MonoBehaviour
         if (newValue == 0)
         {
             _UIGameStartCountdown.text = "GOOOOO !!!!";
-            StartCoroutine(ClearDisplay());
+            StartCoroutine(ClearDisplay(_UIGameStartCountdown));
         }
     }
-    private IEnumerator ClearDisplay()
+    private IEnumerator ClearDisplay(TextMeshProUGUI display)
     {
         yield return new WaitForSeconds(2);
-        _UIGameStartCountdown.text = string.Empty;
+        display.text = string.Empty;
     }
 }
