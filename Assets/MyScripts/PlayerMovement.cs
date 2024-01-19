@@ -37,7 +37,6 @@ public class PlayerMovement : NetworkBehaviour
         {
             if(!_isGrounded && value)
             {
-                print("ce que je veux");
                 animator.SetBool("Jump", false);
             }
             _isGrounded = value;
