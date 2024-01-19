@@ -10,6 +10,22 @@ public class PlayerMovement : NetworkBehaviour
     public LayerMask groundLayer; // Layer pour détecter le sol
     public float groundCheckDistance = 0.2f; // Distance pour vérifier si le personnage est au sol
     public bool IsMoving { get; set; }
+    public bool DisableMovement
+    {
+        get { return _disableMovement; }
+        set
+        {
+            if (value)
+            {
+                IsMoving = false;
+                _disableMovement = true;
+            }
+            else
+            {
+                _disableMovement = false;
+            }
+        }
+    }
 
     private Rigidbody rb; // Rigidbody du personnage
     private Vector3 movement; // Direction du mouvement basée sur les entrées de l'utilisateur

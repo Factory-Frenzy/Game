@@ -1,6 +1,7 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static Unity.Netcode.NetworkManager;
 
 /// </summary>
@@ -40,6 +41,11 @@ public class ConnectionApprovalHandler : MonoBehaviour
         {
             isApproved = false;
             response.Reason = "Too many players in lobby!";
+        }
+        if (SceneManager.GetActiveScene().name != "Lobby")
+        {
+            isApproved = false;
+            response.Reason = "Game is already started ...";
         }
         response.Approved = isApproved;
         response.CreatePlayerObject = isApproved;
