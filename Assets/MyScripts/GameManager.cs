@@ -67,6 +67,7 @@ public class GameManager : NetworkBehaviour
     [ClientRpc]
     private void LetsGoPlayeClientRpc()
     {
+        // Lancer tout les script avant debut de partie
         NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerMovement>().DisableMovement = false;
     }
 }
