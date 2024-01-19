@@ -8,7 +8,7 @@ public class StartGame : MonoBehaviour
 {
     public void StartGameButton()
     {
-        GameManager.Instance.GetClientsInfos();
+        GameManager.Instance.InitClientsInfos();
         NetworkManager.Singleton.SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
 }

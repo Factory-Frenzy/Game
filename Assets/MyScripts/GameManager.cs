@@ -27,7 +27,7 @@ public class GameManager : NetworkBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void GetClientsInfos()
+    public void InitClientsInfos()
     {
         if (IsServer)
         {
@@ -92,7 +92,7 @@ public class GameManager : NetworkBehaviour
         NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerMovement>().DisableMovement = false;
     }
 
-    private ClientsInfos GetPlayerInfo(ulong playerId)
+    public ClientsInfos GetPlayerInfo(ulong playerId)
     {
         foreach (var item in _clientsInfos)
         {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Netcode;
@@ -72,10 +73,31 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    [ServerRpc]
+    private void GetCheckpointForThisPlayerServerRpc(ulong playerId)
+    {
+        Transform checkpoint = GameManager.Instance.GetPlayerInfo(playerId).Checkpoint;
+        if (checkpoint == null)
+        {
+            checkpoint = GameObject.FindGameObjectsWithTag("Spawn")[playerId].transform;
+        }
+        SendCheckpointForThisPlayerClientRpc(playerId, checkpoint.position);
+    }
+
+    [ClientRpc]
+    private void SendCheckpointForThisPlayerClientRpc(ulong playerId, Vector3 checkpoint)
+    {
+        if (NetworkManager.Singleton.LocalClientId == playerId)
+        {
+            NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.transform.position = checkpoint;
+        }
+    }
+
     private IEnumerator TailspinCoroutine()
     {
         yield return new WaitForSeconds(5);
         print("Saut dans le vide detecter");
+        GetCheckpointForThisPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
     }
 
     public override void OnNetworkSpawn()
