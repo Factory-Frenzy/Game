@@ -7,9 +7,12 @@ public class OnlyForHost : MonoBehaviour
 {
     void Start()
     {
-        if (NetworkManager.Singleton.IsServer)
+/*        print("IsServer: "+ NetworkManager.Singleton.IsServer);
+        print("IsHost: "+ NetworkManager.Singleton.IsHost);
+        print("IsClient: "+ NetworkManager.Singleton.IsClient);*/
+        if (!NetworkManager.Singleton.IsServer)
         {
-            this.gameObject.SetActive(true);
+            this.gameObject.SetActive(false);
         } 
     }
 }

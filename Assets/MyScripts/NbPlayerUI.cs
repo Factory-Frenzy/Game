@@ -16,6 +16,6 @@ public class NbPlayerUI : MonoBehaviour
 
     private void OnNewClientAccepted(object sender, int numberOfPlayers)
     {
-        _nbPlayerUi.text = "Player: " + numberOfPlayers.ToString();
+        _nbPlayerUi.text = "Nb Players: " + numberOfPlayers.ToString();
     }
 }

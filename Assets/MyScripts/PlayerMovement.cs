@@ -32,7 +32,6 @@ public class PlayerMovement : NetworkBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        print(animator);
         rb = GetComponent<Rigidbody>(); // Récupérer le Rigidbody du personnage
         if (!cameraTransform)
         {
