@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -29,8 +30,20 @@ public class PlayerMovement : NetworkBehaviour
 
     private Rigidbody rb; // Rigidbody du personnage
     private Vector3 movement; // Direction du mouvement basée sur les entrées de l'utilisateur
-    private bool isGrounded; // Est-ce que le personnage est au sol
-
+    private bool IsGrounded
+    {
+        get { return _isGrounded; }
+        set
+        {
+            if(!_isGrounded && value)
+            {
+                print("ce que je veux");
+                animator.SetBool("Jump", false);
+            }
+            _isGrounded = value;
+        }
+    }
+    private bool _isGrounded;
     private Animator animator;
     private bool _disableMovement = false;
 
@@ -85,11 +98,12 @@ public class PlayerMovement : NetworkBehaviour
         }
 
         // Vérifier si le personnage est au sol
-        isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
+        IsGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
 
         // Gérer le saut
-        if (isGrounded && jumpPressed)
+        if (IsGrounded && jumpPressed)
         {
+            animator.SetBool("Jump", true);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
