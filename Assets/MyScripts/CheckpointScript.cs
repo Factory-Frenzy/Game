@@ -1,7 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlatformEndScript : NetworkBehaviour
+public class CheckpointScript : NetworkBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
@@ -10,7 +12,7 @@ public class PlatformEndScript : NetworkBehaviour
             PlayerMovement player = other.gameObject.GetComponent<PlayerMovement>();
             if (player)
             {
-                GameManager.Instance.EndGameForThisPlayer(player.NetworkObject.OwnerClientId);
+                GameManager.Instance.NewCheckpointForThisPlayer(player.NetworkObject.OwnerClientId, this.transform);
             }
         }
     }
