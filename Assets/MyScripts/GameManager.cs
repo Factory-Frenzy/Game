@@ -27,7 +27,7 @@ public class GameManager : NetworkBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
+    public void GetClientsInfos()
     {
         if (IsServer)
         {
@@ -110,6 +110,12 @@ public class GameManager : NetworkBehaviour
         print("PlayerId: " + playerId + " " + "ScoreTime: " + TimeLeft.Value);
         GetPlayerInfo(playerId).ScoreTime = TimeLeft.Value;
     }
+
+    public void NewCheckpointForThisPlayer(ulong playerId, Transform checkpoint)
+    {
+        print("PlayerId: " + playerId + " " + "Checkpoint: " + checkpoint);
+        GetPlayerInfo(playerId).Checkpoint = checkpoint;
+    }
 }
 
 public class ClientsInfos
@@ -117,11 +123,14 @@ public class ClientsInfos
     public ulong ClientId;
     public bool IsReady;
     public int ScoreTime;
+    public Transform Checkpoint;
 
     public ClientsInfos(ulong ClientId)
     {
         this.ClientId = ClientId;
         this.IsReady = false;
         this.ScoreTime = -1;
+        this.Checkpoint = null;
+        //this.Checkpoint = GameObject.FindGameObjectsWithTag("Spawn")[ClientId].transform;
     }
 }
