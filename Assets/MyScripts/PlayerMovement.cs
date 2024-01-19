@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Netcode;
 using UnityEngine;
@@ -20,6 +21,7 @@ public class PlayerMovement : NetworkBehaviour
             {
                 IsMoving = false;
                 _disableMovement = true;
+                
             }
             else
             {
@@ -39,12 +41,42 @@ public class PlayerMovement : NetworkBehaviour
             {
                 animator.SetBool("Jump", false);
             }
+            Tailspin = value;
             _isGrounded = value;
         }
     }
     private bool _isGrounded;
     private Animator animator;
     private bool _disableMovement = false;
+    private IEnumerator _tailspinCoroutine = null;
+    private bool _tailspin;
+    private bool Tailspin
+    {
+        get { return _tailspin; }
+        set
+        {
+            if (Tailspin != value)
+            {
+                if (!value)
+                {
+                    _tailspinCoroutine = TailspinCoroutine();
+                    StartCoroutine(_tailspinCoroutine);
+                }
+                else
+                {
+                    if(_tailspinCoroutine != null)
+                    StopCoroutine(_tailspinCoroutine);
+                }
+                _tailspin = value;
+            }
+        }
+    }
+
+    private IEnumerator TailspinCoroutine()
+    {
+        yield return new WaitForSeconds(5);
+        print("Saut dans le vide detecter");
+    }
 
     public override void OnNetworkSpawn()
     {

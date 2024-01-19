@@ -116,6 +116,7 @@ public class GameManager : NetworkBehaviour
         print("PlayerId: " + playerId + " " + "Checkpoint: " + checkpoint);
         GetPlayerInfo(playerId).Checkpoint = checkpoint;
     }
+
 }
 
 public class ClientsInfos
