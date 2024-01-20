@@ -18,10 +18,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Platform End Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4652329573806549489, guid: eac2e128ec83cff40ae9c74a5da924bc,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 6411661464498510576, guid: eac2e128ec83cff40ae9c74a5da924bc,
         type: 3}
       propertyPath: m_Size.y
-      value: 3.8216493
+      value: 4.6142063
       objectReference: {fileID: 0}
     - target: {fileID: 6411661464498510576, guid: eac2e128ec83cff40ae9c74a5da924bc,
         type: 3}
@@ -31,7 +36,17 @@ PrefabInstance:
     - target: {fileID: 6411661464498510576, guid: eac2e128ec83cff40ae9c74a5da924bc,
         type: 3}
       propertyPath: m_Center.y
-      value: 1.4108248
+      value: 1.8071029
+      objectReference: {fileID: 0}
+    - target: {fileID: 6411661464498510576, guid: eac2e128ec83cff40ae9c74a5da924bc,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -0.000007646693
+      objectReference: {fileID: 0}
+    - target: {fileID: 6411661464498510576, guid: eac2e128ec83cff40ae9c74a5da924bc,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6581443949971158542, guid: eac2e128ec83cff40ae9c74a5da924bc,
         type: 3}

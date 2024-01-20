@@ -11,10 +11,15 @@ public class GameManager : NetworkBehaviour
     public static GameManager Instance = null;
     public NetworkVariable<int> GameStartCountdown = new NetworkVariable<int>(3);
     public NetworkVariable<int> TimeLeft = new NetworkVariable<int>(60*1+10);
+    public List<ClientsInfos> ClientsInfos {
+        get { return _clientsInfos; }
+        private set {  _clientsInfos = value; }
+    }
 
     private List<ClientsInfos> _clientsInfos = new List<ClientsInfos>();
     private int _nbClientsReady = 0;
     private readonly object _lock = new object();
+    private int _nbWinner = 0;
     private void Awake()
     {
         if (Instance != null)
@@ -70,17 +75,24 @@ public class GameManager : NetworkBehaviour
     private IEnumerator RunGameChrono()
     {
         yield return new WaitForSeconds(1);
+        if (TimeLeft.Value <= 0) yield break;
         TimeLeft.Value--;
 
         if (TimeLeft.Value == 0)
         {
             // FIN DU JEUX
-            // TODO
+            EndGame();
         }
         else
         {
             StartCoroutine(RunGameChrono());
         }
+    }
+
+    private void EndGame()
+    {
+        print("FIN DU JEUX");
+        NetworkManager.Singleton.SceneManager.LoadScene("EndGame", LoadSceneMode.Single);
     }
 
     [ClientRpc]
@@ -108,30 +120,43 @@ public class GameManager : NetworkBehaviour
     public void EndGameForThisPlayer(ulong playerId)
     {
         print("PlayerId: " + playerId + " " + "ScoreTime: " + TimeLeft.Value);
-        GetPlayerInfo(playerId).ScoreTime = TimeLeft.Value;
+        var player = GetPlayerInfo(playerId);
+        player.ScoreTime = TimeLeft.Value;
+        _nbWinner++;
+        if (_nbWinner == 1)
+        {
+            TimeLeft.Value = 10;
+        }
+        if (_nbWinner == _clientsInfos.Count)
+        {
+            TimeLeft.Value = 0;
+            // FIN DU JEUX
+            EndGame();
+        }
     }
 
     public void NewCheckpointForThisPlayer(ulong playerId, Transform checkpoint)
     {
         print("PlayerId: " + playerId + " " + "Checkpoint: " + checkpoint);
-        GetPlayerInfo(playerId).Checkpoint = checkpoint;
+        GetPlayerInfo(playerId).CheckpointPosition = checkpoint.position;
     }
 
 }
 
+[Serializable]
 public class ClientsInfos
 {
-    public ulong ClientId;
-    public bool IsReady;
-    public int ScoreTime;
-    public Transform Checkpoint;
+    public ulong ClientId { get; set; }
+    public bool IsReady { get; set; }
+    public int ScoreTime { get; set; }
+    public Vector3 CheckpointPosition { get; set; }
 
     public ClientsInfos(ulong ClientId)
     {
         this.ClientId = ClientId;
         this.IsReady = false;
         this.ScoreTime = -1;
-        this.Checkpoint = null;
+        //this.CheckpointPosition
         //this.Checkpoint = GameObject.FindGameObjectsWithTag("Spawn")[ClientId].transform;
     }
 }
