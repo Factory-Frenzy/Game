@@ -46,7 +46,7 @@ public class ScoreboardScript : NetworkBehaviour
             }
             else
             {
-                _UIScoreboard.text += "XXX Player: " + _clientsInfos[i].ClientId + isMe + " ScoreTime: Lose\n";
+                _UIScoreboard.text += "X. Player: " + _clientsInfos[i].ClientId + isMe + " ScoreTime: Lose\n";
             }
         }
     }
