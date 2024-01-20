@@ -11,10 +11,10 @@ public class NbPlayerUI : MonoBehaviour
     void Start()
     {
         _nbPlayerUi = this.GetComponent<TextMeshProUGUI>();
-        ConnectionApprovalHandler.NewClientAccepted += OnNewClientAccepted;
+        ConnectionApprovalHandler.NbClientUpdate += OnNbClientUpdate;
     }
 
-    private void OnNewClientAccepted(object sender, int numberOfPlayers)
+    private void OnNbClientUpdate(object sender, int numberOfPlayers)
     {
         _nbPlayerUi.text = "Nb Players: " + numberOfPlayers.ToString();
     }

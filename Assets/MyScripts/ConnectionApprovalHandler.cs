@@ -15,7 +15,7 @@ public class ConnectionApprovalHandler : MonoBehaviour
 {
     private NetworkManager m_NetworkManager;
     
-    public static event EventHandler<int> NewClientAccepted;
+    public static event EventHandler<int> NbClientUpdate;
     public int MaxNumberOfPlayers = 10;
     private int _numberOfPlayers = 0;
 
@@ -50,7 +50,7 @@ public class ConnectionApprovalHandler : MonoBehaviour
         response.Approved = isApproved;
         response.CreatePlayerObject = isApproved;
         response.Position = new Vector3(0, 3, 0);
-        NewClientAccepted?.Invoke(this, _numberOfPlayers);
+        NbClientUpdate?.Invoke(this, _numberOfPlayers);
 
     }
 
@@ -61,5 +61,6 @@ public class ConnectionApprovalHandler : MonoBehaviour
             Debug.Log($"Approval Declined Reason: {m_NetworkManager.DisconnectReason}");
         }
         _numberOfPlayers--;
+        NbClientUpdate?.Invoke(this, _numberOfPlayers);
     }
 }
