@@ -12,7 +12,26 @@ public class PlayerMovement : NetworkBehaviour
     public Transform cameraTransform; // Transform de la caméra
     public LayerMask groundLayer; // Layer pour détecter le sol
     public float groundCheckDistance = 0.2f; // Distance pour vérifier si le personnage est au sol
-    public bool IsMoving { get; set; }
+    private bool _isMoving;
+    private bool IsMoving
+    {
+        get { return _isMoving; }
+        set
+        {
+            if (value != _isMoving)
+            {
+                if (value)
+                {
+                    animator.SetBool("IsMoving", true);
+                }
+                else
+                {
+                    animator.SetBool("IsMoving", false);
+                }
+                _isMoving = value;
+            }
+        }
+    }
     public bool DisableMovement
     {
         get { return _disableMovement; }
@@ -21,6 +40,7 @@ public class PlayerMovement : NetworkBehaviour
             if (value)
             {
                 IsMoving = false;
+                animator.SetBool("Jump", false);
                 _disableMovement = true;
                 
             }
@@ -76,12 +96,12 @@ public class PlayerMovement : NetworkBehaviour
     [ServerRpc]
     private void GetCheckpointForThisPlayerServerRpc(ulong playerId)
     {
-        Transform checkpoint = GameManager.Instance.GetPlayerInfo(playerId).Checkpoint;
-        if (checkpoint == null)
+        Vector3 checkpoint = GameManager.Instance.GetPlayerInfo(playerId).CheckpointPosition;
+        if (checkpoint == Vector3.zero)
         {
-            checkpoint = GameObject.FindGameObjectsWithTag("Spawn")[playerId].transform;
+            checkpoint = GameObject.FindGameObjectsWithTag("Spawn")[playerId].transform.position;
         }
-        SendCheckpointForThisPlayerClientRpc(playerId, checkpoint.position);
+        SendCheckpointForThisPlayerClientRpc(playerId, checkpoint);
     }
 
     [ClientRpc]
@@ -131,7 +151,7 @@ public class PlayerMovement : NetworkBehaviour
         bool jumpPressed = Input.GetButtonDown("Jump"); // Détecter si l'utilisateur appuie sur la barre espace
         IsMoving = moveVertical != 0 || moveHorizontal != 0 ? true : false;
 
-        animator.SetBool("IsMoving", IsMoving);
+        //animator.SetBool("IsMoving", IsMoving);
 
         // Calculer la direction du mouvement
         Vector3 forward = cameraTransform.forward;

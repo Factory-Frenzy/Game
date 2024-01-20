@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -43,11 +44,11 @@ public class GameGeneration : NetworkBehaviour
         // Stop mouvement player
         NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerMovement>().DisableMovement = true;
         // Set positon player in a spawn place
-        NetworkManager.Singleton.LocalClient.PlayerObject.transform.position = 
-            GameObject.FindGameObjectsWithTag("Spawn")
-            [NetworkManager.Singleton.LocalClientId].transform.position;
+        List<GameObject> spawnList = new List<GameObject>(GameObject.FindGameObjectsWithTag("Spawn"));
+        spawnList = spawnList.OrderBy(x => x.name).ToList();
+        NetworkManager.Singleton.LocalClient.PlayerObject.transform.position = spawnList[(int)NetworkManager.Singleton.LocalClientId].transform.position;
         // Set rotation player 
-        NetworkManager.Singleton.LocalClient.PlayerObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+        NetworkManager.Singleton.LocalClient.PlayerObject.transform.rotation = Quaternion.Euler(0, 0, 0);
         GameManager.Instance.ImReadyServerRpc();
     }
 }
