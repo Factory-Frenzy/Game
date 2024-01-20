@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6164561348425603543
+--- !u!1001 &171886914509907644
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -18,10 +18,15 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 0.41
       objectReference: {fileID: 0}
+    - target: {fileID: 3541890436503415731, guid: cb393791a18ada94eb066a003dd9bcab,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4652329573806549489, guid: cb393791a18ada94eb066a003dd9bcab,
         type: 3}
       propertyPath: m_Name
-      value: Platform Checkpoint Variant
+      value: Platform Checkpoint Variant 1
       objectReference: {fileID: 0}
     - target: {fileID: 6581443949971158542, guid: cb393791a18ada94eb066a003dd9bcab,
         type: 3}
@@ -31,12 +36,12 @@ PrefabInstance:
     - target: {fileID: 6581443949971158542, guid: cb393791a18ada94eb066a003dd9bcab,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6581443949971158542, guid: cb393791a18ada94eb066a003dd9bcab,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 14.1
       objectReference: {fileID: 0}
     - target: {fileID: 6581443949971158542, guid: cb393791a18ada94eb066a003dd9bcab,
         type: 3}
@@ -73,6 +78,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8417264380321789813, guid: cb393791a18ada94eb066a003dd9bcab,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8417264380321789813, guid: cb393791a18ada94eb066a003dd9bcab,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5447baf2f6948264389405ad8d4e725c, type: 2}
+    - target: {fileID: 8417264380321789813, guid: cb393791a18ada94eb066a003dd9bcab,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: e51fb8f6a1d6a7547a5f4c21299781d8, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -80,31 +100,31 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4652329573806549489, guid: cb393791a18ada94eb066a003dd9bcab,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: -6924847921046143578}
+      addedObject: {fileID: 2728221286327837591}
     - targetCorrespondingSourceObject: {fileID: 4652329573806549489, guid: cb393791a18ada94eb066a003dd9bcab,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 978973569450153734}
+      addedObject: {fileID: 5425812225807838730}
   m_SourcePrefab: {fileID: 100100000, guid: cb393791a18ada94eb066a003dd9bcab, type: 3}
---- !u!1 &1521247985815154726 stripped
+--- !u!1 &4824145912314859341 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4652329573806549489, guid: cb393791a18ada94eb066a003dd9bcab,
     type: 3}
-  m_PrefabInstance: {fileID: 6164561348425603543}
+  m_PrefabInstance: {fileID: 171886914509907644}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-6924847921046143578
+--- !u!114 &2728221286327837591
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1521247985815154726}
+  m_GameObject: {fileID: 4824145912314859341}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1046593154
+  GlobalObjectIdHash: 884168018
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -112,15 +132,23 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &978973569450153734
+--- !u!114 &5425812225807838730
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1521247985815154726}
+  m_GameObject: {fileID: 4824145912314859341}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82bf761138f4e124ebe13e2b5c842196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _checkpointValidated: {fileID: 8553051919130972617}
+  _greenMaterial: {fileID: 2100000, guid: e51fb8f6a1d6a7547a5f4c21299781d8, type: 2}
+--- !u!23 &8553051919130972617 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8417264380321789813, guid: cb393791a18ada94eb066a003dd9bcab,
+    type: 3}
+  m_PrefabInstance: {fileID: 171886914509907644}
+  m_PrefabAsset: {fileID: 0}
