@@ -27,21 +27,27 @@ public class ScoreboardScript : NetworkBehaviour
         _clientsInfos = _clientsInfos.OrderByDescending(client => client.ScoreTime).ToList();
         string clientsInfosString = JsonConvert.SerializeObject(_clientsInfos, jsonSettings);
         SendClientsInfosClientRpc(clientsInfosString);
-
-        DispScoreBoard();
     }
 
     [ClientRpc]
     private void SendClientsInfosClientRpc(string clientsInfosString)
     {
         _clientsInfos = JsonConvert.DeserializeObject<List<ClientsInfos>>(clientsInfosString);
+        DispScoreBoard();
     }
     private void DispScoreBoard()
     {
         for (int i = 0; i < _clientsInfos.Count; i++)
         {
             var isMe = NetworkManager.Singleton.LocalClientId == _clientsInfos[i].ClientId ? "(You)" : "";
-            _UIScoreboard.text += i+1 + ". Player: " + _clientsInfos[i].ClientId + isMe + " ScoreTime: " + _clientsInfos[i].ScoreTime;
+            if (_clientsInfos[i].ScoreTime > -1)
+            {
+                _UIScoreboard.text += i + 1 + ". Player: " + _clientsInfos[i].ClientId + isMe + " ScoreTime: " + _clientsInfos[i].ScoreTime + "\n";
+            }
+            else
+            {
+                _UIScoreboard.text += "XXX Player: " + _clientsInfos[i].ClientId + isMe + " ScoreTime: Lose\n";
+            }
         }
     }
 }
