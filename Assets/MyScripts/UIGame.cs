@@ -29,7 +29,10 @@ public class UIGame : MonoBehaviour
 
     private void UIChronoUpdate(int previousValue, int newValue)
     {
-        _UIChrono.text = newValue.ToString();
+        if (newValue > 0)
+            _UIChrono.text = newValue.ToString();
+        else
+            ClearDisplay(_UIChrono);
     }
 
     private void UIGameStartCountdownUpdate(int previousValue, int newValue)
