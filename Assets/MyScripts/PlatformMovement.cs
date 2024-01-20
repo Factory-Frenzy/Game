@@ -15,7 +15,6 @@ public class PlatformMovement : NetworkBehaviour
     }
     void Update()
     {
-        print("coucou");
         MoveTowardsTarget();
     }
     private void MoveTowardsTarget()
