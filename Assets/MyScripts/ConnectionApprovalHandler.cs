@@ -60,7 +60,7 @@ public class ConnectionApprovalHandler : MonoBehaviour
         {
             Debug.Log($"Approval Declined Reason: {m_NetworkManager.DisconnectReason}");
         }
-        _numberOfPlayers--;
+        _numberOfPlayers = _numberOfPlayers-- > 1 ? _numberOfPlayers-- : 1;
         NbClientUpdate?.Invoke(this, _numberOfPlayers);
     }
 }
