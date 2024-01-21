@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EndPointA: {fileID: 3986799871413356919}
-  EndPointB: {fileID: 3986799871413356919}
+  EndPointB: {fileID: 8000520737389310081}
   PlatformRoot: {fileID: 4687140759688669819}
   Speed: 1
 --- !u!114 &4847440545812468894
@@ -230,6 +230,12 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2798385, y: 0.014537895, z: 0.52169436}
   m_Center: {x: 0.00012574196, y: 0.027363045, z: 0.0007047654}
+--- !u!4 &8000520737389310081 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5997146355834588493, guid: cbef053bb7f0361469609f5fd499b1d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 4340814657895857612}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8984064395943892029 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4652329573806549489, guid: cbef053bb7f0361469609f5fd499b1d2,
@@ -248,7 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 0
+  GlobalObjectIdHash: 2504594480
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
