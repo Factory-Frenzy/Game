@@ -201,8 +201,8 @@ MonoBehaviour:
   SyncPositionY: 0
   SyncPositionZ: 0
   SyncRotAngleX: 0
-  SyncRotAngleY: 0
-  SyncRotAngleZ: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 0
   SyncScaleX: 1
   SyncScaleY: 1
   SyncScaleZ: 1
@@ -230,7 +230,8 @@ MonoBehaviour:
   OutputCanon: {fileID: 4792954147650749491}
   Boulet: {fileID: 764953997350757162, guid: 488df2a167c74a1408847678df4dbb78, type: 3}
   SpeedRotation: 1
-  BouletForce: 10
+  BouletForceForward: 10
+  BouletForceUp: 2
   AngleShoot: 30
 --- !u!135 &6629050545863316922
 SphereCollider:
