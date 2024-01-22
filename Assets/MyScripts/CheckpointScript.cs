@@ -19,8 +19,24 @@ public class CheckpointScript : NetworkBehaviour
             {
                 GameManager.Instance.NewCheckpointForThisPlayer(player.NetworkObject.OwnerClientId, this.transform);
                 _checkpointValidated.SetMaterials(new List<Material> { _greenMaterial });
-                _saved = true;
+                CheckpointOKServerRpc(NetworkManager.Singleton.LocalClientId);
             }
         }
     }
+
+    [ServerRpc]
+    private void CheckpointOKServerRpc(ulong clientId)
+    {
+        CheckpointOKClientRpc(clientId);
+    }
+
+    [ClientRpc]
+    private void CheckpointOKClientRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            _saved = true;
+        }
+    }
+
 }
