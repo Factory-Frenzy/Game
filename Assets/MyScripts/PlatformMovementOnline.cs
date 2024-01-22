@@ -15,9 +15,12 @@ public class PlatformMovementOnline : NetworkBehaviour
     {
         target = EndPointA;
     }
-    void Update()
+    private void Update()
     {
         MoveTowardsTarget();
+    }
+    private void FixedUpdate()
+    {
         MoveTowardsPlayer();
     }
     private void MoveTowardsTarget()
@@ -27,8 +30,8 @@ public class PlatformMovementOnline : NetworkBehaviour
             // Calcule la nouvelle position
             newPosition = Vector3.MoveTowards(PlatformRoot.position, target.position, Speed * Time.deltaTime);
             // Déplace le GameObject vers la nouvelle position
-            if(IsServer)
-            PlatformRoot.position = newPosition;
+            if (IsServer)
+                PlatformRoot.position = newPosition;
         }
 
         // Vérifie si le GameObject a atteint la cible
@@ -40,9 +43,9 @@ public class PlatformMovementOnline : NetworkBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
-            if(other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+            if (other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
             {
                 playerRb = other.gameObject.GetComponent<Rigidbody>();
             }
@@ -50,7 +53,7 @@ public class PlatformMovementOnline : NetworkBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
             if (other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
             {

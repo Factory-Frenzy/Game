@@ -10,7 +10,7 @@ public class GameManager : NetworkBehaviour
     [NonSerialized]
     public static GameManager Instance = null;
     public NetworkVariable<int> GameStartCountdown = new NetworkVariable<int>(3);
-    public NetworkVariable<int> TimeLeft = new NetworkVariable<int>(60*1+10);
+    public NetworkVariable<int> TimeLeft = new NetworkVariable<int>(60*10+10);
     public List<ClientsInfos> ClientsInfos {
         get { return _clientsInfos; }
         private set {  _clientsInfos = value; }
