@@ -104,7 +104,10 @@ public class GameManager : NetworkBehaviour
     {
         // Lancer tout les script avant debut de partie
         // ... TODO ....
-
+        foreach (var item in GameObject.FindGameObjectsWithTag("PlatformMove"))
+        {
+            item.GetComponent<PlatformMovementOnline>().SetActive(true);
+        }
         NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerMovement>().DisableMovement = false;
     }
 

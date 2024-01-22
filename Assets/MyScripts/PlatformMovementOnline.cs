@@ -8,6 +8,7 @@ using static UnityEngine.Rendering.DebugUI;
 public class PlatformMovementOnline : NetworkBehaviour
 {
     public float Speed = 1.0f;
+    public bool Active = false;
 
     [SerializeField] private Transform EndPointA;
     [SerializeField] private Transform EndPointB;
@@ -15,11 +16,9 @@ public class PlatformMovementOnline : NetworkBehaviour
 
     private Transform target = null;
     private Rigidbody playerRb = null;
-    private NetworkVariable<Vector3> PlayerPositionCoef = new NetworkVariable<Vector3>(Vector3.zero);
+    private Vector3 PlayerPositionCoef;
     private void Start()
     {
-        if (!NetworkManager.Singleton.IsServer) return;
-        print("server");
         target = EndPointA;
     }
     private void Update()
@@ -28,6 +27,8 @@ public class PlatformMovementOnline : NetworkBehaviour
     }
     private void MoveTowardsTarget()
     {
+        if (!Active) return;
+
         if (target != null)
         {
             // Calcule la nouvelle position
@@ -36,12 +37,12 @@ public class PlatformMovementOnline : NetworkBehaviour
             Vector3 vecteurDirecteurDeplacement = (newPosition - PlatformRoot.position).normalized;
             float normeVecteurP1P2 = Vector3.Distance(newPosition, PlatformRoot.position);
 
-            PlayerPositionCoef.Value = normeVecteurP1P2*vecteurDirecteurDeplacement;
+            PlayerPositionCoef = normeVecteurP1P2*vecteurDirecteurDeplacement;
             PlatformRoot.position = newPosition;
         }
         if (playerRb)
         {
-            playerRb.MovePosition(playerRb.position + PlayerPositionCoef.Value);
+            playerRb.MovePosition(playerRb.position + PlayerPositionCoef);
         }
         
     }
@@ -51,7 +52,7 @@ public class PlatformMovementOnline : NetworkBehaviour
         {
             playerRb = other.gameObject.GetComponent<Rigidbody>();
         }
-        else if ((other.gameObject == EndPointA.gameObject || other.gameObject == EndPointB.gameObject) && target)
+        else if (other.gameObject == EndPointA.gameObject || other.gameObject == EndPointB.gameObject)
         {
             target = target == EndPointA ? EndPointB : EndPointA;
         }
@@ -62,5 +63,9 @@ public class PlatformMovementOnline : NetworkBehaviour
         {
             playerRb = null;
         }
+    }
+    public void SetActive(bool active)
+    {
+        Active = active;
     }
 }
