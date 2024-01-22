@@ -184,7 +184,7 @@ public class PlayerMovement : NetworkBehaviour
     private void FixedUpdate()
     {
         if (_disableMovement) return;
-        // Appliquer le mouvement au Rigidbody
+        if (movement == Vector3.zero) return;
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 
