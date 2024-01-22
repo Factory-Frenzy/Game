@@ -42,11 +42,11 @@ public class PlatformMovementOnline : NetworkBehaviour
         }
 
         // Vérifie si le GameObject a atteint la cible
-        if (Vector3.Distance(PlatformRoot.gameObject.GetComponent<Rigidbody>().position, target.position) < 0.001f)
+        /*if (Vector3.Distance(PlatformRoot.gameObject.GetComponent<Rigidbody>().position, target.position) < 0.001f)
         {
             // Alterne la cible
             target = target == EndPointA ? EndPointB : EndPointA;
-        }
+        }*/
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -56,6 +56,10 @@ public class PlatformMovementOnline : NetworkBehaviour
             {
                 playerRb = other.gameObject.GetComponent<Rigidbody>();
             }
+        }
+        else if (other.gameObject == EndPointA.gameObject || other.gameObject == EndPointB.gameObject)
+        {
+            target = target == EndPointA ? EndPointB : EndPointA;
         }
     }
     private void OnTriggerExit(Collider other)
