@@ -22,7 +22,7 @@ public class PlatformMovementOnline : NetworkBehaviour
         print("server");
         target = EndPointA;
     }
-    private void Update()
+    private void FixedUpdate()
     {
         MoveTowardsTarget();
     }
