@@ -380,7 +380,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   turnSpeed: 10
-  jumpForce: 7
+  jumpForce: 6
   cameraTransform: {fileID: 6312888408959647392}
   groundLayer:
     serializedVersion: 2
