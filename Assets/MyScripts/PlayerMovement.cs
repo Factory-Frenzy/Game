@@ -4,6 +4,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Netcode;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -45,6 +46,8 @@ public class PlayerMovement : NetworkBehaviour
                 IsMoving = false;
                 //animator.SetBool("Jump", false);
                 AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "Jump", false);
+                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsGrounded", true);
+                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsMoving", false);
                 _disableMovement = true;
                 
             }
@@ -126,7 +129,6 @@ public class PlayerMovement : NetworkBehaviour
             //Destroy(this);
         }
     }
-
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -169,7 +171,13 @@ public class PlayerMovement : NetworkBehaviour
 
         // Vérifier si le personnage est au sol
         IsGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
+        var IsGrounded2 = Physics.CheckSphere(transform.position, 0.35f, groundLayer);
 
+        if (IsGrounded2 != animator.GetBool("IsGrounded"))
+        {
+            AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsGrounded", IsGrounded2);
+        }
+        
         // Gérer le saut
         if (IsGrounded && jumpPressed)
         {
@@ -178,6 +186,11 @@ public class PlayerMovement : NetworkBehaviour
             //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             AddForceServerRpc(NetworkManager.Singleton.LocalClientId, jumpForce);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(transform.position, groundCheckDistance);
     }
 
     private void FixedUpdate()

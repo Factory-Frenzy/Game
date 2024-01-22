@@ -140,4 +140,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7024cf5e1229c64cac5f195aca8f39c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForceBumper: 15
+  ForceBumper: 10
