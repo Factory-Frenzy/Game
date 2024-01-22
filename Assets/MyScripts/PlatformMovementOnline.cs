@@ -8,6 +8,7 @@ public class PlatformMovementOnline : NetworkBehaviour
     [SerializeField] private Transform EndPointB;
     [SerializeField] private Transform PlatformRoot;
 
+    private Rigidbody PlatformRootRb;
     private Transform target;
     private Rigidbody playerRb = null;
     private Vector3 vecteurDirecteurDeplacement;
@@ -17,6 +18,7 @@ public class PlatformMovementOnline : NetworkBehaviour
     void Start()
     {
         target = EndPointA;
+        PlatformRootRb = PlatformRoot.GetComponent<Rigidbody>();
     }
     private void Update()
     {
@@ -32,9 +34,9 @@ public class PlatformMovementOnline : NetworkBehaviour
         if (target != null)
         {
             // Calcule la nouvelle position
-            newPosition = Vector3.MoveTowards(PlatformRoot.gameObject.GetComponent<Rigidbody>().position, target.position, Speed * Time.deltaTime);
-            vecteurDirecteurDeplacement = (newPosition - PlatformRoot.gameObject.GetComponent<Rigidbody>().position).normalized;
-            normeVecteurP1P2 = Vector3.Distance(newPosition, PlatformRoot.gameObject.GetComponent<Rigidbody>().position);
+            newPosition = Vector3.MoveTowards(PlatformRootRb.position, target.position, Speed * Time.deltaTime);
+            vecteurDirecteurDeplacement = (newPosition - PlatformRootRb.position).normalized;
+            normeVecteurP1P2 = Vector3.Distance(newPosition, PlatformRootRb.position);
             if (IsServer)
                 PlatformRoot.gameObject.GetComponent<Rigidbody>().position = newPosition;
         }
