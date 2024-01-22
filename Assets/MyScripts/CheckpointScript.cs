@@ -9,17 +9,21 @@ public class CheckpointScript : NetworkBehaviour
     private MeshRenderer _checkpointValidated;
     [SerializeField]
     private Material _greenMaterial;
-    private bool _saved = false;
+    private List<ulong> _savedList = new List<ulong>();
     private void OnTriggerEnter(Collider other)
     {
         if (IsServer)
         {
             PlayerMovement player = other.gameObject.GetComponent<PlayerMovement>();
-            if (player && !_saved)
+            if (player)
             {
-                GameManager.Instance.NewCheckpointForThisPlayer(player.NetworkObject.OwnerClientId, this.transform);
-                _checkpointValidated.SetMaterials(new List<Material> { _greenMaterial });
-                CheckpointOKServerRpc(NetworkManager.Singleton.LocalClientId);
+                if (!_savedList.Contains(player.NetworkObject.OwnerClientId))
+                {
+                    GameManager.Instance.NewCheckpointForThisPlayer(player.NetworkObject.OwnerClientId, this.transform);
+                    GameManager.Instance.NewCheckpointForThisPlayer(player.NetworkObject.OwnerClientId, this.transform);
+                    CheckpointOKServerRpc(player.NetworkObject.OwnerClientId);
+                    _savedList.Add(player.NetworkObject.OwnerClientId);
+                }
             }
         }
     }
@@ -35,7 +39,7 @@ public class CheckpointScript : NetworkBehaviour
     {
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
-            _saved = true;
+            _checkpointValidated.SetMaterials(new List<Material> { _greenMaterial });
         }
     }
 

@@ -14,17 +14,16 @@ public class PlatformMovementOnline : NetworkBehaviour
     [SerializeField] private Transform PlatformRoot;
 
     private Transform target = null;
-    private Rigidbody playerRb = null;
-    private NetworkVariable<Vector3> PlayerPositionCoef = new NetworkVariable<Vector3>(Vector3.zero);
+    private List<Rigidbody> playersRb = new List<Rigidbody>();
+
     private void Start()
     {
-        if (!NetworkManager.Singleton.IsServer) return;
-        print("server");
         target = EndPointA;
     }
     private void FixedUpdate()
     {
-        MoveTowardsTarget();
+        if (IsServer)
+            MoveTowardsTarget();
     }
     private void MoveTowardsTarget()
     {
@@ -35,32 +34,30 @@ public class PlatformMovementOnline : NetworkBehaviour
             Vector3 newPosition = new Vector3(tamp.x, PlatformRoot.position.y, tamp.z);
             Vector3 vecteurDirecteurDeplacement = (newPosition - PlatformRoot.position).normalized;
             float normeVecteurP1P2 = Vector3.Distance(newPosition, PlatformRoot.position);
-
-            PlayerPositionCoef.Value = normeVecteurP1P2*vecteurDirecteurDeplacement;
             PlatformRoot.position = newPosition;
-        }
-        if (playerRb)
-        {
-            playerRb.MovePosition(playerRb.position + PlayerPositionCoef.Value);
-        }
-        
+
+            foreach (var playerRb in playersRb)
+            {
+                playerRb.MovePosition(playerRb.position + normeVecteurP1P2 * vecteurDirecteurDeplacement);
+            }
+        }        
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        if (other.gameObject.CompareTag("Player"))
         {
-            playerRb = other.gameObject.GetComponent<Rigidbody>();
+            playersRb.Add(other.gameObject.GetComponent<Rigidbody>());
         }
-        else if ((other.gameObject == EndPointA.gameObject || other.gameObject == EndPointB.gameObject) && target)
+        else if (other.gameObject == EndPointA.gameObject || other.gameObject == EndPointB.gameObject)
         {
             target = target == EndPointA ? EndPointB : EndPointA;
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        if (other.gameObject.CompareTag("Player"))
         {
-            playerRb = null;
+            playersRb.Remove(other.gameObject.GetComponent<Rigidbody>());
         }
     }
 }
