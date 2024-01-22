@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PlayerMovement : NetworkBehaviour
@@ -22,11 +23,13 @@ public class PlayerMovement : NetworkBehaviour
             {
                 if (value)
                 {
-                    animator.SetBool("IsMoving", true);
+                    //animator.SetBool("IsMoving", true);
+                    AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsMoving", true);
                 }
                 else
                 {
-                    animator.SetBool("IsMoving", false);
+                    //animator.SetBool("IsMoving", false);
+                    AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsMoving", false);
                 }
                 _isMoving = value;
             }
@@ -40,7 +43,8 @@ public class PlayerMovement : NetworkBehaviour
             if (value)
             {
                 IsMoving = false;
-                animator.SetBool("Jump", false);
+                //animator.SetBool("Jump", false);
+                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "Jump", false);
                 _disableMovement = true;
                 
             }
@@ -60,7 +64,8 @@ public class PlayerMovement : NetworkBehaviour
         {
             if(!_isGrounded && value)
             {
-                animator.SetBool("Jump", false);
+                //animator.SetBool("Jump", false);
+                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "Jump", false);
             }
             Tailspin = value;
             _isGrounded = value;
@@ -101,16 +106,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             checkpoint = GameObject.FindGameObjectsWithTag("Spawn")[playerId].transform.position;
         }
-        SendCheckpointForThisPlayerClientRpc(playerId, checkpoint);
-    }
-
-    [ClientRpc]
-    private void SendCheckpointForThisPlayerClientRpc(ulong playerId, Vector3 checkpoint)
-    {
-        if (NetworkManager.Singleton.LocalClientId == playerId)
-        {
-            NetworkManager.Singleton.LocalClient.PlayerObject.gameObject.transform.position = checkpoint;
-        }
+        NetworkManager.Singleton.ConnectedClients[playerId].PlayerObject.gameObject.transform.position = checkpoint;
     }
 
     private IEnumerator TailspinCoroutine()
@@ -167,7 +163,8 @@ public class PlayerMovement : NetworkBehaviour
         if (movement != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(movement);
-            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
+            //rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
+            RotateServerRpc(NetworkManager.Singleton.LocalClientId, movement);
         }
 
         // Vérifier si le personnage est au sol
@@ -176,8 +173,10 @@ public class PlayerMovement : NetworkBehaviour
         // Gérer le saut
         if (IsGrounded && jumpPressed)
         {
-            animator.SetBool("Jump", true);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            //animator.SetBool("Jump", true);
+            AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "Jump", true);
+            //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            AddForceServerRpc(NetworkManager.Singleton.LocalClientId, jumpForce);
         }
     }
 
@@ -185,13 +184,45 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (_disableMovement) return;
         if (movement == Vector3.zero) return;
+        //rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        MovePositionServerRpc(NetworkManager.Singleton.LocalClientId, movement);
+    }
+
+    [ServerRpc]
+    private void MovePositionServerRpc(ulong clientId,Vector3 movement)
+    {
+        var rb = NetworkManager.Singleton.ConnectedClients[clientId]
+            .PlayerObject.gameObject
+            .GetComponent<Rigidbody>();
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
-
-    public void OnFootstep() 
+    [ServerRpc]
+    private void AddForceServerRpc(ulong clientId, float jumpForce)
     {
-        //print("OnFootstep");
+        var rb = NetworkManager.Singleton.ConnectedClients[clientId]
+            .PlayerObject.gameObject
+            .GetComponent<Rigidbody>();
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+    [ServerRpc]
+    private void AnimationServerRpc(ulong clientId,string animation,bool active)
+    {
+        var animator = NetworkManager.Singleton.ConnectedClients[clientId]
+            .PlayerObject.gameObject
+            .GetComponent<Animator>();
+        animator.SetBool(animation, active);
+    }
+    [ServerRpc]
+    private void RotateServerRpc(ulong clientId,Vector3 movement)
+    {
+        Quaternion targetRotation = Quaternion.LookRotation(movement);
+        var rb = NetworkManager.Singleton.ConnectedClients[clientId]
+            .PlayerObject.gameObject
+            .GetComponent<Rigidbody>();
+        rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
     }
 
-    public void OnLand() { }
+
+    public void OnFootstep(){}
+    public void OnLand(){}
 }
