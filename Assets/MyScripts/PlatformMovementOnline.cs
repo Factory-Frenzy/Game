@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlatformMovementOnline : NetworkBehaviour
 {
@@ -9,68 +11,56 @@ public class PlatformMovementOnline : NetworkBehaviour
 
     [SerializeField] private Transform EndPointA;
     [SerializeField] private Transform EndPointB;
-    [SerializeField] private Transform PlatformRootRb;
+    [SerializeField] private Transform PlatformRoot;
 
-    private Transform target;
-    private List<Rigidbody> playersRb = new List<Rigidbody>();
-    private Vector3 vecteurDirecteurDeplacement;
-    private float normeVecteurP1P2;
-    private Vector3 newPosition;
-
-    void Start()
+    private Transform target = null;
+    private Rigidbody playerRb = null;
+    private NetworkVariable<Vector3> PlayerPositionCoef = new NetworkVariable<Vector3>(Vector3.zero);
+    private void Start()
     {
+        if (!NetworkManager.Singleton.IsServer) return;
+        print("server");
         target = EndPointA;
     }
-    private void FixedUpdate()
+    private void Update()
     {
-        if (!IsServer) return;
         MoveTowardsTarget();
-        MoveTowardsPlayer();
     }
     private void MoveTowardsTarget()
     {
         if (target != null)
         {
             // Calcule la nouvelle position
-            newPosition = Vector3.MoveTowards(PlatformRootRb.position, target.position, Speed * Time.deltaTime);
-            vecteurDirecteurDeplacement = (newPosition - PlatformRootRb.position).normalized;
-            normeVecteurP1P2 = Vector3.Distance(newPosition, PlatformRootRb.position);
-            PlatformRootRb.position = newPosition;
+            Vector3 tamp = Vector3.MoveTowards(PlatformRoot.position, target.position, Speed * Time.deltaTime);
+            Vector3 newPosition = new Vector3(tamp.x, PlatformRoot.position.y, tamp.z);
+            Vector3 vecteurDirecteurDeplacement = (newPosition - PlatformRoot.position).normalized;
+            float normeVecteurP1P2 = Vector3.Distance(newPosition, PlatformRoot.position);
+
+            PlayerPositionCoef.Value = normeVecteurP1P2*vecteurDirecteurDeplacement;
+            PlatformRoot.position = newPosition;
         }
+        if (playerRb)
+        {
+            playerRb.MovePosition(playerRb.position + PlayerPositionCoef.Value);
+        }
+        
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
-            playersRb.Add(other.gameObject.GetComponent<Rigidbody>());
+            playerRb = other.gameObject.GetComponent<Rigidbody>();
         }
-        else if (other.gameObject == EndPointA.gameObject || other.gameObject == EndPointB.gameObject)
+        else if ((other.gameObject == EndPointA.gameObject || other.gameObject == EndPointB.gameObject) && target)
         {
             target = target == EndPointA ? EndPointB : EndPointA;
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
         {
-            playersRb.Remove(other.gameObject.GetComponent<Rigidbody>());
-        }
-    }
-    private void MoveTowardsPlayer()
-    {
-        foreach (var playerRb in playersRb)
-        {
-            ulong clientId = playerRb.gameObject.GetComponent<NetworkObject>().OwnerClientId;
-            MovePositionClientRpc(clientId, playerRb.position + normeVecteurP1P2 * vecteurDirecteurDeplacement);
-        }
-    }
-
-    [ClientRpc]
-    private void MovePositionClientRpc(ulong clientId, Vector3 position)
-    {
-        if (clientId == NetworkManager.Singleton.LocalClientId)
-        {
-            NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<Rigidbody>().MovePosition(position);
+            playerRb = null;
         }
     }
 }
