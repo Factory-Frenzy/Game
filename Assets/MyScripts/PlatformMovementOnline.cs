@@ -1,31 +1,29 @@
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PlatformMovementOnline : NetworkBehaviour
 {
+    public float Speed = 1.0f;
+
     [SerializeField] private Transform EndPointA;
     [SerializeField] private Transform EndPointB;
-    [SerializeField] private Transform PlatformRoot;
+    [SerializeField] private Transform PlatformRootRb;
 
-    private Rigidbody PlatformRootRb;
     private Transform target;
-    private Rigidbody playerRb = null;
+    private List<Rigidbody> playersRb = new List<Rigidbody>();
     private Vector3 vecteurDirecteurDeplacement;
     private float normeVecteurP1P2;
     private Vector3 newPosition;
-    public float Speed = 1.0f;
+
     void Start()
     {
         target = EndPointA;
-        PlatformRootRb = PlatformRoot.GetComponent<Rigidbody>();
-    }
-    private void Update()
-    {
-        
     }
     private void FixedUpdate()
     {
+        if (!IsServer) return;
         MoveTowardsTarget();
         MoveTowardsPlayer();
     }
@@ -37,25 +35,14 @@ public class PlatformMovementOnline : NetworkBehaviour
             newPosition = Vector3.MoveTowards(PlatformRootRb.position, target.position, Speed * Time.deltaTime);
             vecteurDirecteurDeplacement = (newPosition - PlatformRootRb.position).normalized;
             normeVecteurP1P2 = Vector3.Distance(newPosition, PlatformRootRb.position);
-            if (IsServer)
-                PlatformRoot.gameObject.GetComponent<Rigidbody>().position = newPosition;
+            PlatformRootRb.position = newPosition;
         }
-
-        // Vérifie si le GameObject a atteint la cible
-        /*if (Vector3.Distance(PlatformRoot.gameObject.GetComponent<Rigidbody>().position, target.position) < 0.001f)
-        {
-            // Alterne la cible
-            target = target == EndPointA ? EndPointB : EndPointA;
-        }*/
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        if (other.gameObject.CompareTag("Player"))
         {
-            if (other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
-            {
-                playerRb = other.gameObject.GetComponent<Rigidbody>();
-            }
+            playersRb.Add(other.gameObject.GetComponent<Rigidbody>());
         }
         else if (other.gameObject == EndPointA.gameObject || other.gameObject == EndPointB.gameObject)
         {
@@ -64,19 +51,26 @@ public class PlatformMovementOnline : NetworkBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
+        if (other.gameObject.CompareTag("Player"))
         {
-            if (other.gameObject.GetComponent<NetworkObject>().OwnerClientId == NetworkManager.Singleton.LocalClientId)
-            {
-                playerRb = null;
-            }
+            playersRb.Remove(other.gameObject.GetComponent<Rigidbody>());
         }
     }
     private void MoveTowardsPlayer()
     {
-        if (!playerRb) return;
+        foreach (var playerRb in playersRb)
+        {
+            ulong clientId = playerRb.gameObject.GetComponent<NetworkObject>().OwnerClientId;
+            MovePositionClientRpc(clientId, playerRb.position + normeVecteurP1P2 * vecteurDirecteurDeplacement);
+        }
+    }
 
-        //print("Rb: " + playerRb.position + " P2: " + positionP2 + " delta: "+delta.normalized+" rayon: "+rayonCercle);
-        playerRb.MovePosition(playerRb.position + normeVecteurP1P2 * vecteurDirecteurDeplacement);
+    [ClientRpc]
+    private void MovePositionClientRpc(ulong clientId, Vector3 position)
+    {
+        if (clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<Rigidbody>().MovePosition(position);
+        }
     }
 }
