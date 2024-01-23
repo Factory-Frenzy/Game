@@ -10,7 +10,7 @@ public class MapImport : MonoBehaviour
     public void GetJSONMap(string pathjsonfile)
     {
         //DEBUG LINE
-        if (pathjsonfile == string.Empty) pathjsonfile = "C:\\Users\\arnau\\Documents\\Annee 5\\Projet RA RV\\Projet_final\\Multi\\Assets\\Resources\\Maps\\map.json";
+        if (pathjsonfile == string.Empty) pathjsonfile = "C:\\Users\\arnau\\Downloads\\map.json";
         string jsonContent = File.ReadAllText(pathjsonfile);
         Map = JsonConvert.DeserializeObject<Map>(jsonContent);
     }

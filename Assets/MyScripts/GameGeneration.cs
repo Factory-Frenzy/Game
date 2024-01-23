@@ -43,6 +43,7 @@ public class GameGeneration : NetworkBehaviour
             NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.GetComponent<PlayerMovement>().EnableMovement = false;
             NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.transform.position = Spawns[i].transform.position;
             NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.transform.rotation = Spawns[i].transform.rotation;
+            GameManager.Instance.GetPlayerInfo((ulong)i).CheckpointPosition = Spawns[i].transform.position;
         }
     }
 }

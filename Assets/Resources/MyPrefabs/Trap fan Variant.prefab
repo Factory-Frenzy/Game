@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 2828283952865437807}
   - component: {fileID: 1180660435483346121}
   - component: {fileID: 439689870052896551}
-  m_Layer: 0
+  - component: {fileID: 985605430666930980}
+  - component: {fileID: 6742391494181082707}
+  m_Layer: 3
   m_Name: Particle System
-  m_TagString: Untagged
+  m_TagString: Particules
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4831,6 +4833,41 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!136 &985605430666930980
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276898876625215202}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 8
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 8
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.08
+  m_Height: 0.7
+  m_Direction: 2
+  m_Center: {x: 2.910383e-11, y: -0.000000007450581, z: 0.34}
+--- !u!114 &6742391494181082707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276898876625215202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfa170593f21b9c409467b1013886104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3178335448806020132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4926,14 +4963,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -6775846642942514159}
-    - targetCorrespondingSourceObject: {fileID: 8077069017562323129, guid: fff5ce17bdec2aa45bda1ca50537819c,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3466574003994775101}
-    - targetCorrespondingSourceObject: {fileID: 8077069017562323129, guid: fff5ce17bdec2aa45bda1ca50537819c,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5013935046194154501}
   m_SourcePrefab: {fileID: 100100000, guid: fff5ce17bdec2aa45bda1ca50537819c, type: 3}
 --- !u!4 &5872027579363849570 stripped
 Transform:
@@ -4941,47 +4970,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3178335448806020132}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6632733776952741021 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8077069017562323129, guid: fff5ce17bdec2aa45bda1ca50537819c,
-    type: 3}
-  m_PrefabInstance: {fileID: 3178335448806020132}
-  m_PrefabAsset: {fileID: 0}
---- !u!136 &3466574003994775101
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6632733776952741021}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.09
-  m_Height: 1
-  m_Direction: 2
-  m_Center: {x: -0.006958698, y: -0.00000031505314, z: 0.47}
---- !u!114 &5013935046194154501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6632733776952741021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfa170593f21b9c409467b1013886104, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7821576459227889109 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4652329573806549489, guid: fff5ce17bdec2aa45bda1ca50537819c,
@@ -5000,7 +4988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1201138265
+  GlobalObjectIdHash: 260381071
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0

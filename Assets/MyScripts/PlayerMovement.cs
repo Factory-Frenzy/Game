@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,10 +16,27 @@ public class PlayerMovement : NetworkBehaviour
     public LayerMask groundLayer; // Layer pour détecter le sol
     public float groundCheckDistance = 0.2f; // Distance pour vérifier si le personnage est au sol
     public bool EnableMovement = true;
+    public bool IsGrounded
+    {
+        get => _isGrounded;
+        set { 
+            _isGrounded = value;
+            if (value)
+            {
+                StopCoroutine(leapIntoSpace);
+            }
+            else
+            {
+                leapIntoSpace = LeapIntoSpace();
+                StartCoroutine(leapIntoSpace);
+            }
+        }
+    }
 
+    private IEnumerator leapIntoSpace = null;
     private Rigidbody rb; // Rigidbody du personnage
     private Vector3 movement; // Direction du mouvement basée sur les entrées de l'utilisateur
-    private bool isGrounded;
+    private bool _isGrounded;
     private Animator animator;
 
     public override void OnNetworkSpawn()
@@ -62,15 +80,14 @@ public class PlayerMovement : NetworkBehaviour
         // Mettre à jour la rotation du personnage
         if (movement != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(movement);
             RotateServerRpc(NetworkManager.Singleton.LocalClientId, movement);
         }
 
         // Vérifier si le personnage est au sol
-        isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
+        IsGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
         
         // Gérer le saut
-        if (isGrounded && jumpPressed)
+        if (IsGrounded && jumpPressed)
         {
             AddForceServerRpc(NetworkManager.Singleton.LocalClientId, jumpForce);
         }
@@ -116,8 +133,18 @@ public class PlayerMovement : NetworkBehaviour
             .GetComponent<Rigidbody>();
         rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
     }
+    [ServerRpc]
+    private void GoToPreviousCheckpointServerRpc(ulong clientId)
+    {
+        NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.gameObject.transform.position =
+            GameManager.Instance.GetPlayerInfo(clientId).CheckpointPosition;
+    }
 
-
+    private IEnumerator LeapIntoSpace()
+    {
+        yield return new WaitForSeconds(5);
+        GoToPreviousCheckpointServerRpc(NetworkManager.Singleton.LocalClientId);
+    }
     public void OnFootstep(){}
     public void OnLand(){}
 }
