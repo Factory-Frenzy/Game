@@ -14,14 +14,14 @@ public class GameGeneration : NetworkBehaviour
     private List<GameObject> Spawns;
     void Start()
     {
-
         if (IsServer)
         {
             MapImport mapImport = NetworkManager.Singleton.gameObject.GetComponent<MapImport>();
-            Maps = mapImport.Maps;
+            Maps = mapImport.Map.objectData;
             Destroy(mapImport);
             //GenerationMap();
-            
+            SpawnPlayers();
+            StartCoroutine(GameManager.Instance.RunGameStartCountdown());
         }
     }
 
@@ -41,14 +41,23 @@ public class GameGeneration : NetworkBehaviour
         for (int i = 0; i < NetworkManager.Singleton.ConnectedClients.Count; i++)
         {
             NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.GetComponent<PlayerMovement>().EnableMovement = false;
-            NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().transform = new Vector3
+            NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.transform.position = Spawns[i].transform.position;
+            NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.transform.rotation = Spawns[i].transform.rotation;
         }
     }
 }
 
+[Serializable]
 public class MapObjectData
 {
     public string name;
     public Vector3 position;
     public Quaternion rotation;
+}
+
+[Serializable]
+public class Map
+{
+    public string name;
+    public List<MapObjectData> objectData;
 }

@@ -11,12 +11,8 @@ public class GameManager : NetworkBehaviour
     public static GameManager Instance = null;
     public NetworkVariable<int> GameStartCountdown = new NetworkVariable<int>(3);
     public NetworkVariable<int> TimeLeft = new NetworkVariable<int>(60*10+10);
-    public List<ClientsInfos> ClientsInfos {
-        get { return _clientsInfos; }
-        private set {  _clientsInfos = value; }
-    }
+    public List<ClientsInfos> ClientsInfos = new List<ClientsInfos>();
 
-    private List<ClientsInfos> _clientsInfos = new List<ClientsInfos>();
     private int _nbWinner = 0;
     private void Awake()
     {
@@ -36,12 +32,12 @@ public class GameManager : NetworkBehaviour
         {
             foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds) 
             {
-                _clientsInfos.Add(new ClientsInfos(clientId));
+                ClientsInfos.Add(new ClientsInfos(clientId));
             }
         }
     }
 
-    private IEnumerator RunGameStartCountdown()
+    public IEnumerator RunGameStartCountdown()
     {
         yield return new WaitForSeconds(1);
         GameStartCountdown.Value--;
@@ -95,7 +91,7 @@ public class GameManager : NetworkBehaviour
 
     public ClientsInfos GetPlayerInfo(ulong playerId)
     {
-        foreach (var item in _clientsInfos)
+        foreach (var item in ClientsInfos)
         {
             if (item.ClientId == playerId)
             {
@@ -116,7 +112,7 @@ public class GameManager : NetworkBehaviour
         {
             TimeLeft.Value = 10;
         }
-        if (_nbWinner == _clientsInfos.Count)
+        if (_nbWinner == ClientsInfos.Count)
         {
             TimeLeft.Value = 0;
             // FIN DU JEUX
