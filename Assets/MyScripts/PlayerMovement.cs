@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Netcode;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -19,7 +15,7 @@ public class PlayerMovement : NetworkBehaviour
     public bool IsGrounded
     {
         get => _isGrounded;
-        set
+        private set
         {
             if (value != _isGrounded)
             {
@@ -27,21 +23,40 @@ public class PlayerMovement : NetworkBehaviour
                 {
                     if (leapIntoSpace != null)
                     StopCoroutine(leapIntoSpace);
+                    if (jumpFalse != null)
+                        StopCoroutine(jumpFalse);
                 }
                 else
                 {
                     leapIntoSpace = LeapIntoSpace();
+                    jumpFalse = JumpFalse();
                     StartCoroutine(leapIntoSpace);
+                    StartCoroutine(jumpFalse);
                 }
+                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.INAIR, !value);
             }
             _isGrounded = value;
         }
     }
+    public bool JumpPressed
+    {
+        get => _jumpPressed;
+        private set
+        {
+            if (value != _jumpPressed)
+            {
+                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.JUMP, value);
+            }
+            _jumpPressed = value;
+        }
+    }
 
     private IEnumerator leapIntoSpace = null;
+    private IEnumerator jumpFalse = null;
     private Rigidbody rb; // Rigidbody du personnage
     private Vector3 movement; // Direction du mouvement basée sur les entrées de l'utilisateur
     private bool _isGrounded;
+    private bool _jumpPressed;
 
     public override void OnNetworkSpawn()
     {
@@ -50,12 +65,11 @@ public class PlayerMovement : NetworkBehaviour
         {
             cameraTransform.gameObject.SetActive(false);
             EnableMovement = false;
-            //Destroy(this);
         }
     }
     private void Start()
     {
-        rb = GetComponent<Rigidbody>(); // Récupérer le Rigidbody du personnage
+        rb = GetComponent<Rigidbody>();
 
         if (!cameraTransform)
         {
@@ -70,7 +84,7 @@ public class PlayerMovement : NetworkBehaviour
         // Récupérer les entrées de l'utilisateur pour le mouvement et le saut
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
-        bool jumpPressed = Input.GetButtonDown("Jump"); // Détecter si l'utilisateur appuie sur la barre espace
+        JumpPressed = Input.GetButtonDown("Jump"); // Détecter si l'utilisateur appuie sur la barre espace
 
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
@@ -90,9 +104,9 @@ public class PlayerMovement : NetworkBehaviour
         // Vérifier si le personnage est au sol
         IsGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
 
-        if (IsGrounded && jumpPressed && rb.velocity.y <= 0.0001)
+        if (IsGrounded && JumpPressed && rb.velocity.y <= 0.0001)
         {
-            AddForceServerRpc(NetworkManager.Singleton.LocalClientId, jumpForce);
+            AddForceServerRpc(NetworkManager.Singleton.LocalClientId);
         }
     }
 
@@ -110,16 +124,20 @@ public class PlayerMovement : NetworkBehaviour
             .PlayerObject.gameObject
             .GetComponent<Rigidbody>();
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+
+        // Lancement de l'animation de la course
+        if (movement == Vector3.zero)
+            AnimationServerRpc(clientId, ANIM.MOVE, false);
+        else
+            AnimationServerRpc(clientId, ANIM.MOVE, true);
     }
     [ServerRpc]
-    private void AddForceServerRpc(ulong clientId, float jumpForce)
+    private void AddForceServerRpc(ulong clientId)
     {
         var rb = NetworkManager.Singleton.ConnectedClients[clientId]
             .PlayerObject.gameObject
             .GetComponent<Rigidbody>();
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        // Lancement de l'animation du saut
-        AnimationServerRpc(clientId, ANIM.INAIR, true);
     }
     [ServerRpc]
     public void AnimationServerRpc(ulong clientId,string animation,bool active)
@@ -127,7 +145,8 @@ public class PlayerMovement : NetworkBehaviour
         var animator = NetworkManager.Singleton.ConnectedClients[clientId]
             .PlayerObject.gameObject
             .GetComponent<Animator>();
-        animator.SetBool(animation, active);
+        if (animator.GetBool(animation) != active)
+            animator.SetBool(animation, active);               
     }
     [ServerRpc]
     private void RotateServerRpc(ulong clientId,Vector3 movement)
@@ -144,12 +163,16 @@ public class PlayerMovement : NetworkBehaviour
         NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.gameObject.transform.position =
             GameManager.Instance.GetPlayerInfo(clientId).CheckpointPosition;
     }
-
     private IEnumerator LeapIntoSpace()
     {
         if (!EnableMovement) yield return 0;
         yield return new WaitForSeconds(5);
         GoToPreviousCheckpointServerRpc(NetworkManager.Singleton.LocalClientId);
+    }
+    private IEnumerator JumpFalse()
+    {
+        yield return new WaitForSeconds(0.250f);
+        AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.JUMP, false);
     }
     public void OnFootstep(){}
     public void OnLand(){}
