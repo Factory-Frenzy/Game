@@ -14,22 +14,27 @@ public class PlayerMovement : NetworkBehaviour
     public float jumpForce = 7f; // Force du saut
     public Transform cameraTransform; // Transform de la caméra
     public LayerMask groundLayer; // Layer pour détecter le sol
-    public float groundCheckDistance = 0.2f; // Distance pour vérifier si le personnage est au sol
-    public bool EnableMovement = true;
+    public float groundCheckDistance; // Distance pour vérifier si le personnage est au sol
+    [NonSerialized] public bool EnableMovement = true;
     public bool IsGrounded
     {
         get => _isGrounded;
-        set { 
+        set
+        {
+            if (value != _isGrounded)
+            {
+                if (value)
+                {
+                    if (leapIntoSpace != null)
+                    StopCoroutine(leapIntoSpace);
+                }
+                else
+                {
+                    leapIntoSpace = LeapIntoSpace();
+                    StartCoroutine(leapIntoSpace);
+                }
+            }
             _isGrounded = value;
-            if (value)
-            {
-                StopCoroutine(leapIntoSpace);
-            }
-            else
-            {
-                leapIntoSpace = LeapIntoSpace();
-                StartCoroutine(leapIntoSpace);
-            }
         }
     }
 
@@ -85,7 +90,7 @@ public class PlayerMovement : NetworkBehaviour
 
         // Vérifier si le personnage est au sol
         IsGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
-        
+        print(IsGrounded);
         // Gérer le saut
         if (IsGrounded && jumpPressed)
         {
@@ -142,6 +147,7 @@ public class PlayerMovement : NetworkBehaviour
 
     private IEnumerator LeapIntoSpace()
     {
+        if (!EnableMovement) yield return 0;
         yield return new WaitForSeconds(5);
         GoToPreviousCheckpointServerRpc(NetworkManager.Singleton.LocalClientId);
     }
