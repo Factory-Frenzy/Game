@@ -218,7 +218,7 @@ public class PlayerMovement : NetworkBehaviour
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
     [ServerRpc]
-    private void AnimationServerRpc(ulong clientId,string animation,bool active)
+    public void AnimationServerRpc(ulong clientId,string animation,bool active)
     {
         var animator = NetworkManager.Singleton.ConnectedClients[clientId]
             .PlayerObject.gameObject
