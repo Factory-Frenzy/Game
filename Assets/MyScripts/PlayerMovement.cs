@@ -42,7 +42,6 @@ public class PlayerMovement : NetworkBehaviour
     private Rigidbody rb; // Rigidbody du personnage
     private Vector3 movement; // Direction du mouvement basée sur les entrées de l'utilisateur
     private bool _isGrounded;
-    private Animator animator;
 
     public override void OnNetworkSpawn()
     {
@@ -56,8 +55,8 @@ public class PlayerMovement : NetworkBehaviour
     }
     private void Start()
     {
-        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>(); // Récupérer le Rigidbody du personnage
+
         if (!cameraTransform)
         {
             Debug.LogError("Camera Transform n'est pas assigné au script CharacterControllerWithCamera.");
@@ -90,9 +89,8 @@ public class PlayerMovement : NetworkBehaviour
 
         // Vérifier si le personnage est au sol
         IsGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
-        print(IsGrounded);
-        // Gérer le saut
-        if (IsGrounded && jumpPressed)
+
+        if (IsGrounded && jumpPressed && rb.velocity.y <= 0.0001)
         {
             AddForceServerRpc(NetworkManager.Singleton.LocalClientId, jumpForce);
         }
@@ -120,6 +118,8 @@ public class PlayerMovement : NetworkBehaviour
             .PlayerObject.gameObject
             .GetComponent<Rigidbody>();
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        // Lancement de l'animation du saut
+        AnimationServerRpc(clientId, ANIM.INAIR, true);
     }
     [ServerRpc]
     public void AnimationServerRpc(ulong clientId,string animation,bool active)
