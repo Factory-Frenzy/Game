@@ -17,8 +17,6 @@ public class GameManager : NetworkBehaviour
     }
 
     private List<ClientsInfos> _clientsInfos = new List<ClientsInfos>();
-    private int _nbClientsReady = 0;
-    private readonly object _lock = new object();
     private int _nbWinner = 0;
     private void Awake()
     {
@@ -39,19 +37,6 @@ public class GameManager : NetworkBehaviour
             foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds) 
             {
                 _clientsInfos.Add(new ClientsInfos(clientId));
-            }
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void ImReadyServerRpc()
-    {
-        lock (_lock)
-        {
-            _nbClientsReady += 1;
-            if (_clientsInfos.Count == _nbClientsReady)
-            {
-                StartCoroutine(RunGameStartCountdown());
             }
         }
     }
@@ -105,7 +90,7 @@ public class GameManager : NetworkBehaviour
         // Lancer tout les script avant debut de partie
         // ... TODO ....
 
-        NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerMovement>().DisableMovement = false;
+        NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerMovement>().EnableMovement = true;
     }
 
     public ClientsInfos GetPlayerInfo(ulong playerId)

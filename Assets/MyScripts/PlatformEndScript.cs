@@ -16,7 +16,7 @@ public class PlatformEndScript : NetworkBehaviour
 
             if(player.NetworkObject.OwnerClientId == NetworkManager.Singleton.LocalClientId)
             {
-                player.DisableMovement = true;
+                player.EnableMovement = false;
                 EndGameForMyPlayer?.Invoke(this, EventArgs.Empty);
             }
         }

@@ -14,110 +14,12 @@ public class PlayerMovement : NetworkBehaviour
     public Transform cameraTransform; // Transform de la caméra
     public LayerMask groundLayer; // Layer pour détecter le sol
     public float groundCheckDistance = 0.2f; // Distance pour vérifier si le personnage est au sol
-    private bool _isMoving;
-    private bool IsMoving
-    {
-        get { return _isMoving; }
-        set
-        {
-            if (value != _isMoving)
-            {
-                if (value)
-                {
-                    //animator.SetBool("IsMoving", true);
-                    AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsMoving", true);
-                }
-                else
-                {
-                    //animator.SetBool("IsMoving", false);
-                    AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsMoving", false);
-                }
-                _isMoving = value;
-            }
-        }
-    }
-    public bool DisableMovement
-    {
-        get { return _disableMovement; }
-        set
-        {
-            if (value)
-            {
-                IsMoving = false;
-                //animator.SetBool("Jump", false);
-                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "Jump", false);
-                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsGrounded", true);
-                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsMoving", false);
-                _disableMovement = true;
-                
-            }
-            else
-            {
-                _disableMovement = false;
-            }
-        }
-    }
+    public bool EnableMovement = true;
 
     private Rigidbody rb; // Rigidbody du personnage
     private Vector3 movement; // Direction du mouvement basée sur les entrées de l'utilisateur
-    private bool IsGrounded
-    {
-        get { return _isGrounded; }
-        set
-        {
-            if(!_isGrounded && value)
-            {
-                //animator.SetBool("Jump", false);
-                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "Jump", false);
-            }
-            Tailspin = value;
-            _isGrounded = value;
-        }
-    }
-    private bool _isGrounded;
+    private bool isGrounded;
     private Animator animator;
-    private bool _disableMovement = false;
-    private IEnumerator _tailspinCoroutine = null;
-    private bool _tailspin;
-    private bool Tailspin
-    {
-        get { return _tailspin; }
-        set
-        {
-            if (Tailspin != value)
-            {
-                if (!value)
-                {
-                    _tailspinCoroutine = TailspinCoroutine();
-                    StartCoroutine(_tailspinCoroutine);
-                }
-                else
-                {
-                    if(_tailspinCoroutine != null)
-                    StopCoroutine(_tailspinCoroutine);
-                }
-                _tailspin = value;
-            }
-        }
-    }
-
-    [ServerRpc]
-    private void GetCheckpointForThisPlayerServerRpc(ulong playerId)
-    {
-        Vector3 checkpoint = GameManager.Instance.GetPlayerInfo(playerId).CheckpointPosition;
-        if (checkpoint == Vector3.zero)
-        {
-            checkpoint = GameObject.FindGameObjectsWithTag("Spawn")[playerId].transform.position;
-        }
-        NetworkManager.Singleton.ConnectedClients[playerId].PlayerObject.gameObject.transform.position = checkpoint;
-    }
-
-    private IEnumerator TailspinCoroutine()
-    {
-        yield return new WaitForSeconds(5);
-        print("Saut dans le vide detecter");
-        GetCheckpointForThisPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
-    }
 
     public override void OnNetworkSpawn()
     {
@@ -125,7 +27,7 @@ public class PlayerMovement : NetworkBehaviour
         if (!IsOwner)
         {
             cameraTransform.gameObject.SetActive(false);
-            _disableMovement = true;
+            EnableMovement = false;
             //Destroy(this);
         }
     }
@@ -141,17 +43,13 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Update()
     {
-        if (_disableMovement) return;
+        if (!EnableMovement) return;
 
         // Récupérer les entrées de l'utilisateur pour le mouvement et le saut
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
         bool jumpPressed = Input.GetButtonDown("Jump"); // Détecter si l'utilisateur appuie sur la barre espace
-        IsMoving = moveVertical != 0 || moveHorizontal != 0 ? true : false;
 
-        //animator.SetBool("IsMoving", IsMoving);
-
-        // Calculer la direction du mouvement
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
         forward.y = 0;
@@ -165,39 +63,23 @@ public class PlayerMovement : NetworkBehaviour
         if (movement != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(movement);
-            //rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
             RotateServerRpc(NetworkManager.Singleton.LocalClientId, movement);
         }
 
         // Vérifier si le personnage est au sol
-        IsGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
-        var IsGrounded2 = Physics.CheckSphere(transform.position, 0.35f, groundLayer);
-
-        if (IsGrounded2 != animator.GetBool("IsGrounded"))
-        {
-            AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "IsGrounded", IsGrounded2);
-        }
+        isGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
         
         // Gérer le saut
-        if (IsGrounded && jumpPressed)
+        if (isGrounded && jumpPressed)
         {
-            //animator.SetBool("Jump", true);
-            AnimationServerRpc(NetworkManager.Singleton.LocalClientId, "Jump", true);
-            //rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             AddForceServerRpc(NetworkManager.Singleton.LocalClientId, jumpForce);
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawSphere(transform.position, groundCheckDistance);
-    }
-
     private void FixedUpdate()
     {
-        if (_disableMovement) return;
-        if (movement == Vector3.zero) return;
-        //rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        if (!EnableMovement) return;
+
         MovePositionServerRpc(NetworkManager.Singleton.LocalClientId, movement);
     }
 

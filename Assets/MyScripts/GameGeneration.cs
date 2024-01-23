@@ -4,28 +4,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameGeneration : NetworkBehaviour
 {
     private List<MapObjectData> Maps;
-    private NetworkVariable<bool> _findSpawn = new NetworkVariable<bool>(false);
+    private List<GameObject> Spawns;
     void Start()
     {
-        _findSpawn.OnValueChanged += (@previous, @next) => FindSpawn();
 
-        if (NetworkManager.Singleton.IsServer)
+        if (IsServer)
         {
             MapImport mapImport = NetworkManager.Singleton.gameObject.GetComponent<MapImport>();
             Maps = mapImport.Maps;
             Destroy(mapImport);
             //GenerationMap();
-            _findSpawn.Value = !_findSpawn.Value;
-        }
-        else if (_findSpawn.Value)
-        {
-            FindSpawn();
+            
         }
     }
 
@@ -39,17 +35,14 @@ public class GameGeneration : NetworkBehaviour
         }
     }
 
-    private void FindSpawn()
+    private void SpawnPlayers()
     {
-        // Stop mouvement player
-        NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerMovement>().DisableMovement = true;
-        // Set positon player in a spawn place
-        List<GameObject> spawnList = new List<GameObject>(GameObject.FindGameObjectsWithTag("Spawn"));
-        spawnList = spawnList.OrderBy(x => x.name).ToList();
-        NetworkManager.Singleton.LocalClient.PlayerObject.transform.position = spawnList[(int)NetworkManager.Singleton.LocalClientId].transform.position;
-        // Set rotation player 
-        NetworkManager.Singleton.LocalClient.PlayerObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-        GameManager.Instance.ImReadyServerRpc();
+        Spawns = GameObject.FindGameObjectsWithTag("Spawn").ToList();
+        for (int i = 0; i < NetworkManager.Singleton.ConnectedClients.Count; i++)
+        {
+            NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.GetComponent<PlayerMovement>().EnableMovement = false;
+            NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject().transform = new Vector3
+        }
     }
 }
 
