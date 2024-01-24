@@ -85,4 +85,3 @@ public enum ObjectType
     Platform = 1,
     Trap = 2,
 }
-}
