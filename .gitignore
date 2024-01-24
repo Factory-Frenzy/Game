@@ -2,6 +2,7 @@
 .idea/
 mono_crash.*.json
 build_BurstDebugInformation_DoNotShip/
+Assets/StreamingAssets/*.json*
 
 # This .gitignore file should be placed at the root of your Unity project directory
 #
