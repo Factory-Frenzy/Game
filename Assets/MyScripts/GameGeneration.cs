@@ -1,12 +1,9 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameGeneration : NetworkBehaviour
 {
@@ -29,8 +26,14 @@ public class GameGeneration : NetworkBehaviour
     {
         foreach (var item in Maps)
         {
-            GameObject prefab_name = Resources.Load("MyPrefabs\\" + item.name + " Variant") as GameObject;
+            GameObject prefab_name = Resources.Load("MyPrefabs\\" + item.prefabName + " Variant") as GameObject;
             var obj = Instantiate(prefab_name, item.position, item.rotation);
+            if (item.prefabName == "Platform Move 520")
+            {
+                obj.transform.Find("EndpointA").transform.position = item.endpoints.a;
+                obj.transform.Find("EndpointB").transform.position = item.endpoints.b;
+                obj.transform.Find("PlatformRoot").GetComponent<PlatformMovementOnline>().Speed = item.speed ?? 1f;
+            }
             obj.GetComponent<NetworkObject>().Spawn();
         }
     }
@@ -51,9 +54,22 @@ public class GameGeneration : NetworkBehaviour
 [Serializable]
 public class MapObjectData
 {
-    public string name;
+    public string prefabName;
+    public ObjectType type;
+    public bool dynamic;
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public float? speed;
     public Vector3 position;
     public Quaternion rotation;
+    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    public ObjectEndpoints endpoints;
+}
+
+[SerializeField]
+public class ObjectEndpoints
+{
+    public Vector3 a;
+    public Vector3 b;
 }
 
 [Serializable]
@@ -61,4 +77,12 @@ public class Map
 {
     public string name;
     public List<MapObjectData> objectData;
+}
+
+public enum ObjectType
+{
+    Undefined = 0,
+    Platform = 1,
+    Trap = 2,
+}
 }
