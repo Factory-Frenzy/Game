@@ -1,12 +1,11 @@
+#if WINDOWS
 using AnotherFileBrowser.Windows;
-using System;
-using System.IO;
+#endif
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.Rendering.HDROutputUtils;
 
 public class ConfigGameManager : MonoBehaviour
 {
@@ -68,6 +67,7 @@ public class ConfigGameManager : MonoBehaviour
 
     public void OpenFileBrowser()
     {
+#if WINDOWS
         var bp = new BrowserProperties();
         bp.filter = "JSON files (*.json) | *.json";
         bp.filterIndex = 0;
@@ -77,6 +77,7 @@ public class ConfigGameManager : MonoBehaviour
             _pathjsonfile = path;
             SceneNameText.text = path.Split("\\")[path.Split("\\").Length - 1];
         });
+#endif
     }
 }
 public enum MenuName
