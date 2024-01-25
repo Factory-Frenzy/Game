@@ -41,12 +41,14 @@ public class GameGeneration : NetworkBehaviour
     private void SpawnPlayers()
     {
         Spawns = GameObject.FindGameObjectsWithTag("Spawn").ToList();
+        GameObject prefab_player_name = Resources.Load("MyPrefabs\\RobotKyle Variant") as GameObject;
+
         for (int i = 0; i < NetworkManager.Singleton.ConnectedClients.Count; i++)
-        {
-            NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.GetComponent<PlayerMovement>().EnableMovement = false;
-            NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.transform.position = Spawns[i].transform.position;
-            NetworkManager.Singleton.ConnectedClients[(ulong)i].PlayerObject.transform.rotation = Spawns[i].transform.rotation;
+        {         
+            var obj = Instantiate(prefab_player_name, Spawns[i].transform.position, Spawns[i].transform.rotation);
+            obj.GetComponent<PlayerMovement>().EnableMovement = false;
             GameManager.Instance.GetPlayerInfo((ulong)i).CheckpointPosition = Spawns[i].transform.position;
+            obj.GetComponent<NetworkObject>().SpawnAsPlayerObject((ulong)i, true);
         }
     }
 }

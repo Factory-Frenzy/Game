@@ -73,10 +73,10 @@ public class GameManager : NetworkBehaviour
     private void EndGame()
     {
         print("FIN DU JEUX");
-        foreach (var item in NetworkManager.Singleton.ConnectedClientsList)
+        /*foreach (var item in NetworkManager.Singleton.ConnectedClientsList)
         {
             item.PlayerObject.Despawn();
-        }
+        }*/
         NetworkManager.Singleton.SceneManager.LoadScene("EndGame", LoadSceneMode.Single);
     }
 
