@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -24,15 +23,11 @@ public class PlayerMovement : NetworkBehaviour
                 {
                     if (leapIntoSpace != null)
                     StopCoroutine(leapIntoSpace);
-                    //if (jumpFalse != null)
-                        //StopCoroutine(jumpFalse);
                 }
                 else
                 {
                     leapIntoSpace = LeapIntoSpace();
-                    jumpFalse = JumpFalse();
                     StartCoroutine(leapIntoSpace);
-                    //StartCoroutine(jumpFalse);
                 }
                 /*AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.INAIR, !value);*/
             }
@@ -57,7 +52,6 @@ public class PlayerMovement : NetworkBehaviour
     public bool LockCursorPressed;
 
     private IEnumerator leapIntoSpace = null;
-    private IEnumerator jumpFalse = null;
     private Rigidbody rb; // Rigidbody du personnage
     private Vector3 movement; // Direction du mouvement bas�e sur les entr�es de l'utilisateur
     private bool _isGrounded;
@@ -186,11 +180,6 @@ public class PlayerMovement : NetworkBehaviour
         if (!EnableMovement) yield return 0;
         yield return new WaitForSeconds(5);
         GoToPreviousCheckpointServerRpc(NetworkManager.Singleton.LocalClientId);
-    }
-    private IEnumerator JumpFalse()
-    {
-        yield return new WaitForSeconds(0.010f);
-        AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.JUMP, false);
     }
     public void OnFootstep(){}
     public void OnLand(){}
