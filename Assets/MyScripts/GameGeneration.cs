@@ -26,7 +26,7 @@ public class GameGeneration : NetworkBehaviour
     {
         foreach (var item in Maps)
         {
-            GameObject prefab_name = Resources.Load("MyPrefabs\\" + item.prefabName + " Variant") as GameObject;
+            GameObject prefab_name = Resources.Load<GameObject>("MyPrefabs\\" + item.prefabName + " Variant");
             var obj = Instantiate(prefab_name, item.position, item.rotation);
             if (item.prefabName == "Platform Move 520")
             {

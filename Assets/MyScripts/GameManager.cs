@@ -9,8 +9,8 @@ public class GameManager : NetworkBehaviour
 {
     [NonSerialized]
     public static GameManager Instance = null;
-    public NetworkVariable<int> GameStartCountdown = new NetworkVariable<int>(3);
-    public NetworkVariable<int> TimeLeft = new NetworkVariable<int>(60*10+10);
+    public NetworkVariable<int> GameStartCountdown = new NetworkVariable<int>(10);
+    public NetworkVariable<int> TimeLeft = new NetworkVariable<int>(60 * 3);
     public List<ClientsInfos> ClientsInfos = new List<ClientsInfos>();
 
     private int _nbWinner = 0;
@@ -61,7 +61,7 @@ public class GameManager : NetworkBehaviour
 
         if (TimeLeft.Value == 0)
         {
-            // FIN DU JEUX
+            // FIN DU JEU
             EndGame();
         }
         else
@@ -72,7 +72,7 @@ public class GameManager : NetworkBehaviour
 
     private void EndGame()
     {
-        print("FIN DU JEUX");
+        print("FIN DU JEU");
         /*foreach (var item in NetworkManager.Singleton.ConnectedClientsList)
         {
             item.PlayerObject.Despawn();
@@ -115,7 +115,7 @@ public class GameManager : NetworkBehaviour
         if (_nbWinner == ClientsInfos.Count)
         {
             TimeLeft.Value = 0;
-            // FIN DU JEUX
+            // FIN DU JEU
             EndGame();
         }
     }

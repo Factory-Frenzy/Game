@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class MapImport : MonoBehaviour
 {
-    public Map Map { get;set; }
+    public Map Map { get; private set; }
     public void GetJSONMap(string pathjsonfile)
     {
-        //DEBUG LINE
+        string jsonContent;
         if (pathjsonfile == string.Empty)
         {
-            pathjsonfile = Path.Combine(Application.streamingAssetsPath, "map.json");
+            jsonContent = Resources.Load("maps/map").ToString();
         }
-        string jsonContent = File.ReadAllText(pathjsonfile);
+        else
+        {
+            jsonContent = File.ReadAllText(pathjsonfile);
+        }
         Map = JsonConvert.DeserializeObject<Map>(jsonContent);
     }
 }
