@@ -24,19 +24,20 @@ public class PlayerMovement : NetworkBehaviour
                 {
                     if (leapIntoSpace != null)
                     StopCoroutine(leapIntoSpace);
-                    if (jumpFalse != null)
-                        StopCoroutine(jumpFalse);
+                    //if (jumpFalse != null)
+                        //StopCoroutine(jumpFalse);
                 }
                 else
                 {
                     leapIntoSpace = LeapIntoSpace();
                     jumpFalse = JumpFalse();
                     StartCoroutine(leapIntoSpace);
-                    StartCoroutine(jumpFalse);
+                    //StartCoroutine(jumpFalse);
                 }
-                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.INAIR, !value);
+                /*AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.INAIR, !value);*/
             }
             _isGrounded = value;
+            AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.INAIR, !value);
         }
     }
     public bool JumpPressed
@@ -46,9 +47,10 @@ public class PlayerMovement : NetworkBehaviour
         {
             if (value != _jumpPressed)
             {
-                AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.JUMP, value);
+                //AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.JUMP, value);
             }
             _jumpPressed = value;
+            AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.JUMP, value);
         }
     }
 
