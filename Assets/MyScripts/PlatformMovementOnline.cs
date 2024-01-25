@@ -31,7 +31,8 @@ public class PlatformMovementOnline : NetworkBehaviour
         {
             // Calcule la nouvelle position
             Vector3 tamp = Vector3.MoveTowards(PlatformRoot.position, target.position, Speed * Time.deltaTime);
-            Vector3 newPosition = new Vector3(tamp.x, PlatformRoot.position.y, tamp.z);
+            //Vector3 newPosition = new Vector3(tamp.x, PlatformRoot.position.y, tamp.z);
+            Vector3 newPosition = tamp;
             Vector3 vecteurDirecteurDeplacement = (newPosition - PlatformRoot.position).normalized;
             float normeVecteurP1P2 = Vector3.Distance(newPosition, PlatformRoot.position);
             PlatformRoot.position = newPosition;

@@ -171,7 +171,7 @@ public class PlayerMovement : NetworkBehaviour
     }
     private IEnumerator JumpFalse()
     {
-        yield return new WaitForSeconds(0.250f);
+        yield return new WaitForSeconds(0.010f);
         AnimationServerRpc(NetworkManager.Singleton.LocalClientId, ANIM.JUMP, false);
     }
     public void OnFootstep(){}

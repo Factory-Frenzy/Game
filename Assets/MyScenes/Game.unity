@@ -209,6 +209,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trap fan Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 7821576459227889109, guid: fb5a6cf1eeaf6a44dbf3215656d88ecd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8596891370649674282, guid: fb5a6cf1eeaf6a44dbf3215656d88ecd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -326,6 +331,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Platform End Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2174677467347235933, guid: 9e7eff69df5a0a24e9fafda4b17d4eb8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3231451177872119817, guid: 9e7eff69df5a0a24e9fafda4b17d4eb8,
         type: 3}
@@ -604,6 +614,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trap bumper Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 3206734019470630211, guid: ca9400f5c7c6547428919aa32d05326c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3982592640470287036, guid: ca9400f5c7c6547428919aa32d05326c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -682,6 +697,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Platform Classical 360 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 706274061968231672, guid: fa2716aa9ac788a44b57a286285c3938,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1299475385084564231, guid: fa2716aa9ac788a44b57a286285c3938,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -754,6 +774,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Platform Checkpoint Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 4824145912314859341, guid: 73613793f5ada6442a0dd5c4a8c77c95,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6428701946161008818, guid: 73613793f5ada6442a0dd5c4a8c77c95,
         type: 3}
@@ -943,6 +968,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Platform Start Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6321488116470795649, guid: 024fe76767306a342a465f921bd70930,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -965,6 +995,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Platform Trampoline Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5237037519894233214, guid: 85c30381014126440affcfc2c7dc1858,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6010098364938739585, guid: 85c30381014126440affcfc2c7dc1858,
         type: 3}
@@ -1034,6 +1069,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Trap shooter Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 333911307407218093, guid: 69ff4c29069815f4fab86a0994ead38d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2180059723114267875, guid: 69ff4c29069815f4fab86a0994ead38d,
         type: 3}
@@ -1182,6 +1222,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Platform Move 520 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 6112549559881029139, guid: 3f57c4c43780bf246b446a74571a4804,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

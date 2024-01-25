@@ -19,7 +19,6 @@ public class UIGame : MonoBehaviour
     {
         GameManager.Instance.GameStartCountdown.OnValueChanged += UIGameStartCountdownUpdate;
         GameManager.Instance.TimeLeft.OnValueChanged += UIChronoUpdate;
-        GameObject.FindObjectOfType(typeof(PlatformEndScript)).GetComponent<PlatformEndScript>().EndGameForMyPlayer += _UIWaitingEndGameUpdate;
     }
 
     private void _UIWaitingEndGameUpdate(object sender, EventArgs e)
@@ -41,6 +40,7 @@ public class UIGame : MonoBehaviour
         if (newValue == 0)
         {
             _UIGameStartCountdown.text = "GOOOOO !!!!";
+            GameObject.FindObjectOfType(typeof(PlatformEndScript)).GetComponent<PlatformEndScript>().EndGameForMyPlayer += _UIWaitingEndGameUpdate;
             StartCoroutine(ClearDisplay(_UIGameStartCountdown));
         }
     }
