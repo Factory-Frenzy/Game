@@ -16,7 +16,7 @@ public class GameGeneration : NetworkBehaviour
             MapImport mapImport = NetworkManager.Singleton.gameObject.GetComponent<MapImport>();
             Maps = mapImport.Map.objectData;
             Destroy(mapImport);
-            //GenerationMap();
+            GenerationMap();
             SpawnPlayers();
             StartCoroutine(GameManager.Instance.RunGameStartCountdown());
         }

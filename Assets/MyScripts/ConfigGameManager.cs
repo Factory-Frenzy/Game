@@ -1,4 +1,4 @@
-#if WINDOWS
+#if UNITY_STANDALONE_WIN
 using AnotherFileBrowser.Windows;
 #endif
 using TMPro;
@@ -67,7 +67,7 @@ public class ConfigGameManager : MonoBehaviour
 
     public void OpenFileBrowser()
     {
-#if WINDOWS
+#if UNITY_STANDALONE_WIN
         var bp = new BrowserProperties();
         bp.filter = "JSON files (*.json) | *.json";
         bp.filterIndex = 0;
