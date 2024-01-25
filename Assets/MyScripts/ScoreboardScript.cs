@@ -1,10 +1,7 @@
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using TreeEditor;
-using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -13,7 +10,7 @@ public class ScoreboardScript : NetworkBehaviour
     [SerializeField]
     private TextMeshProUGUI _UIScoreboard;
     private List<ClientsInfos> _clientsInfos;
-    private JsonSerializerSettings jsonSettings = new JsonSerializerSettings
+    private JsonSerializerSettings jsonSettings = new()
     {
         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
         Formatting = Formatting.Indented,

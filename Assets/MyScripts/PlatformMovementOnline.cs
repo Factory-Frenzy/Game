@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI;
 
 public class PlatformMovementOnline : NetworkBehaviour
 {
