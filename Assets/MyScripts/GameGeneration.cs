@@ -48,7 +48,6 @@ public class GameGeneration : NetworkBehaviour
         for (int i = 0; i < NetworkManager.Singleton.ConnectedClients.Count; i++)
         {         
             var obj = Instantiate(prefab_player_name, Spawns[i].transform.position, Spawns[i].transform.rotation);
-            obj.GetComponent<PlayerMovement>().EnableMovement = false;
             GameManager.Instance.GetPlayerInfo((ulong)i).CheckpointPosition = Spawns[i].transform.position;
             obj.GetComponent<NetworkObject>().SpawnAsPlayerObject((ulong)i, true);
         }

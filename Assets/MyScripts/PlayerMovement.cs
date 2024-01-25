@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : NetworkBehaviour
 {
@@ -60,6 +61,7 @@ public class PlayerMovement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        EnableMovement = SceneManager.GetActiveScene().name == "Lobby" ? true : false;
         if (!IsOwner)
         {
             cameraTransform.gameObject.SetActive(false);
@@ -69,7 +71,7 @@ public class PlayerMovement : NetworkBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-
+        
         if (!cameraTransform)
         {
             Debug.LogError("Camera Transform n'est pas assign� au script CharacterControllerWithCamera.");
