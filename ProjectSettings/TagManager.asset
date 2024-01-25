@@ -6,6 +6,8 @@ TagManager:
   tags:
   - CinemachineTarget
   - Spawn
+  - Particules
+  - MapObject
   layers:
   - Default
   - TransparentFX

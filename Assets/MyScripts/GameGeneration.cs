@@ -34,6 +34,8 @@ public class GameGeneration : NetworkBehaviour
                 obj.transform.Find("EndpointB").transform.position = item.endpoints.b;
                 obj.transform.Find("PlatformRoot").GetComponent<PlatformMovementOnline>().Speed = item.speed ?? 1f;
             }
+
+            obj.tag = "MapObject";
             obj.GetComponent<NetworkObject>().Spawn();
         }
     }
