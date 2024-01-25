@@ -61,17 +61,20 @@ public class PlayerMovement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        print(EnableMovement);
+
         if (!IsOwner)
         {
             cameraTransform.gameObject.SetActive(false);
             EnableMovement = false;
+            return;
         }
+        EnableMovement = SceneManager.GetActiveScene().name == "Lobby" ? true : false;
+        SceneManager.sceneLoaded += BlockPlayer;
     }
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        SceneManager.sceneLoaded += BlockPlayer;
+        
         if (!cameraTransform)
         {
             Debug.LogError("Camera Transform n'est pas assign� au script CharacterControllerWithCamera.");
@@ -80,7 +83,7 @@ public class PlayerMovement : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    private void BlockPlayer(Scene arg0, LoadSceneMode arg1)
+    private void BlockPlayer(Scene arg0 = default, LoadSceneMode arg1 = default)
     {
         if (IsOwner)
         EnableMovement = arg0.name == "Lobby" ? true : false;
