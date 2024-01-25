@@ -12,7 +12,7 @@ public class PlayerMovement : NetworkBehaviour
     public Transform cameraTransform; // Transform de la cam�ra
     public LayerMask groundLayer; // Layer pour d�tecter le sol
     public float groundCheckDistance; // Distance pour v�rifier si le personnage est au sol
-    [NonSerialized] public bool EnableMovement = false;
+    [NonSerialized] public bool EnableMovement;
     public bool IsGrounded
     {
         get => _isGrounded;
