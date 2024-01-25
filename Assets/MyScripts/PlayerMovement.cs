@@ -2,15 +2,16 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : NetworkBehaviour
 {
-    public float moveSpeed = 5f; // Vitesse de déplacement du personnage
+    public float moveSpeed = 5f; // Vitesse de dï¿½placement du personnage
     public float turnSpeed = 10f; // Vitesse de rotation du personnage
     public float jumpForce = 7f; // Force du saut
-    public Transform cameraTransform; // Transform de la caméra
-    public LayerMask groundLayer; // Layer pour détecter le sol
-    public float groundCheckDistance; // Distance pour vérifier si le personnage est au sol
+    public Transform cameraTransform; // Transform de la camï¿½ra
+    public LayerMask groundLayer; // Layer pour dï¿½tecter le sol
+    public float groundCheckDistance; // Distance pour vï¿½rifier si le personnage est au sol
     [NonSerialized] public bool EnableMovement = true;
     public bool IsGrounded
     {
@@ -51,10 +52,12 @@ public class PlayerMovement : NetworkBehaviour
         }
     }
 
+    public bool LockCursorPressed;
+
     private IEnumerator leapIntoSpace = null;
     private IEnumerator jumpFalse = null;
     private Rigidbody rb; // Rigidbody du personnage
-    private Vector3 movement; // Direction du mouvement basée sur les entrées de l'utilisateur
+    private Vector3 movement; // Direction du mouvement basï¿½e sur les entrï¿½es de l'utilisateur
     private bool _isGrounded;
     private bool _jumpPressed;
 
@@ -73,19 +76,32 @@ public class PlayerMovement : NetworkBehaviour
 
         if (!cameraTransform)
         {
-            Debug.LogError("Camera Transform n'est pas assigné au script CharacterControllerWithCamera.");
+            Debug.LogError("Camera Transform n'est pas assignï¿½ au script CharacterControllerWithCamera.");
         }
+        
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+    
+    public void ToggleCursorLock()
+    {
+        Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None: CursorLockMode.Locked;
     }
 
     private void Update()
     {
         if (!EnableMovement) return;
 
-        // Récupérer les entrées de l'utilisateur pour le mouvement et le saut
+        // Rï¿½cupï¿½rer les entrï¿½es de l'utilisateur pour le mouvement et le saut
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
-        JumpPressed = Input.GetButtonDown("Jump"); // Détecter si l'utilisateur appuie sur la barre espace
+        JumpPressed = Input.GetButtonDown("Jump"); // Dï¿½tecter si l'utilisateur appuie sur la barre espace
+        LockCursorPressed = Input.GetKey(KeyCode.L);
 
+        if (LockCursorPressed && IsServer)
+        {
+            ToggleCursorLock();
+        }
+        
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
         forward.y = 0;
@@ -95,13 +111,13 @@ public class PlayerMovement : NetworkBehaviour
 
         movement = (forward * moveVertical + right * moveHorizontal).normalized;
 
-        // Mettre à jour la rotation du personnage
+        // Mettre ï¿½ jour la rotation du personnage
         if (movement != Vector3.zero)
         {
             RotateServerRpc(NetworkManager.Singleton.LocalClientId, movement);
         }
 
-        // Vérifier si le personnage est au sol
+        // Vï¿½rifier si le personnage est au sol
         IsGrounded = Physics.CheckSphere(transform.position, groundCheckDistance, groundLayer);
 
         if (IsGrounded && JumpPressed && rb.velocity.y <= 0.0001)
