@@ -12,7 +12,7 @@ public class PlayerMovement : NetworkBehaviour
     public Transform cameraTransform; // Transform de la cam�ra
     public LayerMask groundLayer; // Layer pour d�tecter le sol
     public float groundCheckDistance; // Distance pour v�rifier si le personnage est au sol
-    [NonSerialized] public bool EnableMovement = true;
+    [NonSerialized] public bool EnableMovement = false;
     public bool IsGrounded
     {
         get => _isGrounded;
@@ -61,7 +61,7 @@ public class PlayerMovement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        EnableMovement = SceneManager.GetActiveScene().name == "Lobby" ? true : false;
+        print(EnableMovement);
         if (!IsOwner)
         {
             cameraTransform.gameObject.SetActive(false);
@@ -71,7 +71,7 @@ public class PlayerMovement : NetworkBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        
+        SceneManager.sceneLoaded += lo;
         if (!cameraTransform)
         {
             Debug.LogError("Camera Transform n'est pas assign� au script CharacterControllerWithCamera.");
@@ -79,7 +79,18 @@ public class PlayerMovement : NetworkBehaviour
         
         Cursor.lockState = CursorLockMode.Locked;
     }
-    
+
+    private void lo(Scene arg0, LoadSceneMode arg1)
+    {
+        if (IsOwner)
+        EnableMovement = arg0.name == "Lobby" ? true : false;
+    }
+
+    private void dd(ulong clientId)
+    {
+        throw new NotImplementedException();
+    }
+
     public void ToggleCursorLock()
     {
         Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None: CursorLockMode.Locked;
