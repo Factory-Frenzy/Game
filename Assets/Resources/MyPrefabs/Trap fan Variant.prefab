@@ -4876,6 +4876,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3762173441519465932, guid: fff5ce17bdec2aa45bda1ca50537819c,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 4652329573806549489, guid: fff5ce17bdec2aa45bda1ca50537819c,
         type: 3}
       propertyPath: m_Name
@@ -4988,7 +4993,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 260381071
+  GlobalObjectIdHash: 1201138265
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
